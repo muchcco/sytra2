@@ -142,4 +142,15 @@ class AccionesController extends Controller
 
         return $deleted_lg_derivar;
     }
+
+    public function edit_logderivar(Request $request)
+    {
+        $log_derivar = Logderivarext::findOrFail($request->id);
+        $log_derivar->forma = $request->forma;
+        $log_derivar->d_oficina = $request->d_oficina;
+        $log_derivar->obs = $request->obs;
+        $log_derivar->save();
+
+        return $log_derivar;
+    }
 }

@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
             // MODALES
             Route::post('/modals/md_archivos_td_folios', [PrincipalController::class, 'md_archivos_td_folios'])->name('modals.md_archivos_td_folios');
             Route::post('/modals/md_ver_td_folios', [PrincipalController::class, 'md_ver_td_folios'])->name('modals.md_ver_td_folios');
+            Route::post('/modals/md_edit_derivar', [PrincipalController::class, 'md_edit_derivar'])->name('modals.md_edit_derivar');
 
             // EDITAR VIEW
             Route::get('/td_folios.php/td_folios_view/{id}', [PrincipalController::class, 'td_folios_view'])->name('td_folios_view');
@@ -40,6 +41,8 @@ Route::group(['middleware' => ['auth']], function () {
             // METODOS GUARDAR ACTUALIZAR ELIMINAR
             Route::post('/storenuevo', [AccionesController::class, 'storenuevo'])->name('storenuevo');
             Route::post('/deletederivado', [AccionesController::class, 'deletederivado'])->name('deletederivado');
+
+            Route::post('/edit_logderivar', [AccionesController::class, 'edit_logderivar'])->name('edit_logderivar');
         });
     });
 });

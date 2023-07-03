@@ -38,7 +38,8 @@
 
 
 <script>
-function selca2(sdep2){
+
+var selca2 = (sdep2) => {
     var ttec=" <?php echo date("d/m/Y");?>";
     var edest=document.getElementById("cabecera");
     var myselect=document.getElementById("td_tipos_id");
@@ -53,6 +54,36 @@ function selca2(sdep2){
     if(tdec=="Otro...") tdec="(Especifique)";
     edest.value=tdec+" "+ttec;
 }
+
+
+var btnEdit = () => {
+
+    var formData = new FormData();
+        
+
+        
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            cache: false,
+            url: "{{ route('modulos.mesapartes.storenuevo') }}",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data){
+               console.log(data);
+               window.location.href = "{{ route('modulos.mesapartes.td_folios') }}";
+
+            },
+            error: function(e){
+                console.log("error");
+            }
+        });
+
+
+}
+
+
 </script>
 
 @endsection
@@ -88,7 +119,7 @@ function selca2(sdep2){
                         <div class="card">
                             <div class="card-header">
                                 <h5>Mesa de Partes</h5>
-                                <span>Datos básicos</span>
+                                <span></span>
                                 <div class="card-header-right">
                                     <i class="icofont icofont-rounded-down"></i>
                                     <i class="icofont icofont-refresh"></i>
@@ -96,91 +127,84 @@ function selca2(sdep2){
                                 </div>
                             </div>
                             <div class="card-block">
-                                <form id="td_nuevo"  enctype="multipart/form-data">
-                                    <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Tipo:</label>
-                                        <div class="col-sm-10">
+                               
+                                <table class="tablas">
+                                    <tr>
+                                        <th style="width: 15%">Item</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">Tipo</th>
+                                        <td>
                                             <select name="td_tipos_id" id="td_tipos_id" class="form-control form-control-inverse" onchange="selca2(this.value);">
                                                 @foreach ($td_tipos as $t)
-                                                    <option value="{{ $t->id }}" {{ $t->id == $folios->td_tipos_id ? 'selected' : '' }}>{{ $t->nombre }}</option>
-                                                @endforeach 
+                                                    <option value="{{ $t->id }}" {{ $t->id == $folios->td_tipos_id ? 'selected' : '' }} >{{ $t->nombre }}</option>
+                                                @endforeach
                                             </select>
-                                            <span class="messages"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Con Pago:</label>
-                                        <div class="col-sm-10 form-check">
-                                            <input name="pagos" type="checkbox" id="pagos" value="{{ $folios->pago}}" {{ $folios->pago == 1 ? 'checked' : null }}/>
-                                            <label class="form-check-label" for="pagos">
-                                                ¿El Expediente viene con recibo algún de pago?
-                                              </label>                                            
-                                            <span class="messages"></span>
-                                          
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Cabecera:</label>
-                                        <div class="col-sm-10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">Expediente N°</th>
+                                        <td>
+                                            <input type="text" class="form-control" value="{{ $folios->exp }} - {{ $folios->año_exp }}" disabled>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">Cabecera</th>
+                                        <td>
                                             <input type="text" class="form-control" id="cabecera" name="cabecera" value="{{ $folios->cabecera }}">
-                                            <span class="messages"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Asunto:</label>
-                                        <div class="col-sm-10">
-                                            <textarea name="asunto" id="asunto" rows="5" cols="5" class="form-control" placeholder="Ingresar un asunto">{{ $folios->obs }}</textarea>
-                                            <span class="messages"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Firma (Nombre):</label>
-                                        <div class="col-sm-10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">Asunto</th>
+                                        <td>
+                                            <textarea name="asunto" id="asunto" rows="5" cols="5" class="form-control" placeholder="Ingresar un asunto">{{ $folios->asunto }}</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">Firma</th>
+                                        <td>
                                             <input type="text" class="form-control" id="firma" name="firma" value="{{ $folios->firma }}">
-                                            <span class="messages"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">N° de Folios:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="nfolios" name="nfolios" value="1" >
-                                            <span class="messages"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Oficina de destino:</label>                                        
-                                        <div class="col-sm-10">
-                                            <select class="form-control form-control-inverse" multiple="multiple" name="d_oficina" id="d_oficina"> 
-                                                {{-- @foreach ($oficinas as $o)
-                                                    <option value="{{ $o->id }}">{{ $o->nombre }}</option>
-                                                @endforeach --}}
-                                            </select>
-                                            <span class="messages"></span>
-                                        </div>                                    
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Prioridad:</label>
-                                        <div class="col-sm-10 form-check">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">N° de folios</th>
+                                        <td>
+                                            <input type="text" class="form-control" id="nfolios" name="nfolios" value="{{ $folios->nfolios }}" >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">prioridad</th>
+                                        <td>
                                             <input name="urgente" type="checkbox" id="urgente" value="{{ $folios->urgente }}" {{ $folios->urgente == 1 ? 'checked' : null }} />
                                             <label class="form-check-label" for="urgente">
                                                 Marcar el expediente como ¡Urgente!
-                                              </label>                                            
-                                            <span class="messages"></span>
-                                          
+                                              </label>    
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 15%">Observaciones</th>
+                                        <td>
+                                            <textarea name="obs" id="obs" rows="5" cols="5" class="form-control" placeholder="Ingresar una observación">{{ $folios->obs }}</textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <br />
+                                <form id="FormDocAdj" name="FormDocAdj" enctype="multipart/form-data">
+                                    <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <label class="control-label">Adjuntar archivos</label><br/>
+                                            <div class="input_container">
+                                                <input type="file" id="fileUpload">
+                                            </div>                                                                                            
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Observaciones:</label>
-                                        <div class="col-sm-10">
-                                            <textarea name="obs" id="obs" rows="5" cols="5" class="form-control" placeholder="Ingresar una observación"></textarea>
-                                            <span class="messages"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2"></label>
-                                        <div class="col-sm-10">
-                                            <button type="button" class="btn btn-primary m-b-0" onclick="btnGuardar()">Modificar</button>
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label class="control-label">.</label><br/>
+                                                    <button class="btn btn-dark  has-dark" id="guardar_doc" type="button" data-bind="click: CargarArchivos"><i class="fa fa-upload" aria-hidden="true"></i>  Cargar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -203,7 +227,7 @@ function selca2(sdep2){
                                         <br />
                                         <ul>
                                             <li><a href=""><i class="icofont icofont-refresh text-success" ></i> Refrescar</a></li>
-                                            <li><a href="{{ route('modulos.td_folios') }}"><i class="icofont icofont-close-circled text-danger"></i> Cancelar e ir a la lista general.</a></li>
+                                            <li><a href="{{ route('modulos.mesapartes.td_folios') }}"><i class="icofont icofont-close-circled text-danger"></i> Cancelar e ir a la lista general.</a></li>
                                         </ul>
                                     </div>
                                 </div>

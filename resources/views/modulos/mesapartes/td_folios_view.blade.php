@@ -135,6 +135,51 @@ var eliminarDerivados = (id) => {
         return false;   
     }
 }
+
+var btnEditDerivar = (id) => {
+    console.log(id);
+    $.ajax({
+        type:'post',
+        url: "{{ route('modulos.mesapartes.modals.md_edit_derivar') }}",
+        dataType: "json",
+        data:{"_token": "{{ csrf_token() }}", id : id},
+        success:function(data){
+            $("#modal_edit_derivar").html(data.html);
+            $("#modal_edit_derivar").modal('show');
+        }
+    });
+}
+
+var btnModificarDerivar = (id) => {
+
+    var EditData = new FormData();
+    EditData.append("forma", $("#forma").val());
+    EditData.append("d_oficina", $("#d_oficina").val());
+    EditData.append("obs", $("#obs").val());
+    EditData.append("id", $("#id").val());
+    EditData.append("_token", $("input[name=_token]").val());
+
+    $.ajax({
+            type: "POST",
+            dataType: "json",
+            cache: false,
+            url: "{{ route('modulos.mesapartes.edit_logderivar') }}",
+            data: EditData,
+            processData: false,
+            contentType: false,
+            success: function(data){
+               console.log(data);
+               table_derivar();
+               $("#modal_edit_derivar").modal('hide');
+
+            },
+            error: function(e){
+                console.log("error");
+            }
+        });
+
+}
+
 </script>
 
 @endsection
@@ -170,7 +215,7 @@ var eliminarDerivados = (id) => {
                         <div class="card">
                             <div class="card-header">
                                 <h5>Mesa de Partes</h5>
-                                <span>Datos básicos</span>
+                                <span></span>
                                 <div class="card-header-right">
                                     <i class="icofont icofont-rounded-down"></i>
                                     <i class="icofont icofont-refresh"></i>
@@ -225,13 +270,19 @@ var eliminarDerivados = (id) => {
                                                                         <tr>
                                                                             <th width="200">Pago</th>
                                                                             <th width="10">:</th>
-                                                                            <td>{{$query->pago }}</td>
+                                                                            <td>
+                                                                                @if( $query->pago === 0)
+                                                                                    NO
+                                                                                @elseif($query->pago === 1)
+                                                                                    SI
+                                                                                @endif
+                                                                            </td>
                                                                         </tr>
                                                                         <tr>
                                                                             <th width="200">Prioridad</th>
                                                                             <th width="10">:</th>
-                                                                            <td class="<?php  if($query->urgente === 1 ){  echo "prioridad";  } ?>">
-                                                                                <?php  if($query->urgente === 1 ){  echo "URGENTE";  } ?>
+                                                                            <td class="<?php  if($query->urgente === 1 ){  echo "urgente";  } ?>">
+                                                                                <?php  if($query->urgente === 1 ){  echo '<label class="text-danger"><i class="fa fa-info-circle"></i> URGENTE</label>';  } ?>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -255,12 +306,12 @@ var eliminarDerivados = (id) => {
                                                                     <tr>
                                                                         <th width="200">Oficina</th>
                                                                         <th width="10">:</th>
-                                                                        <td>{{$query->c_oficina }}</td>
+                                                                        <td>{{$query->nom_lug }} | {{$query->nom_ofi }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th width="200">Empleado</th>
                                                                         <th width="10">:</th>
-                                                                        <td>{{$query->empid }}</td>
+                                                                        <td>{{$query->nombres }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th width="200">N° Interno	</th>
@@ -402,21 +453,16 @@ var eliminarDerivados = (id) => {
                                     <div class="panel-body">                                        
                                         <br />
                                         <ul>
-                                            <li><a href=""><i class="icofont icofont-refresh text-success" ></i> Refrescar</a></li>
-                                            <li><a href="{{ route('modulos.mesapartes.td_folios') }}"><i class="icofont icofont-close-circled text-danger"></i> Cancelar e ir a la lista general.</a></li>
+                                            <li><a href=""><i class="icofont icofont-refresh text-success" ></i> Refrescar página</a></li>
+                                            <li><a href=""><i class="icofont icofont-edit text-default" ></i> Modificar folio</a></li>
+                                            <li><a href=""><i class="icofont icofont-close-circled text-danger"></i> Eliminar folio.</a></li>
+                                            <li><a href=""><i class="icofont icofont-print text-primary" ></i> Cargo</a></li>
+                                            <li><a href=""><i class="icofont icofont-print text-primary" ></i> Imprimir</a></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <br />
                                 <br />
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading bg-primary">
-                                        Información
-                                    </div>
-                                    <div class="panel-body">
-                                        <p>Rellene los cuadros y luego pulse el boton modificar para almacenar los datos, si desea cancelar puede usar el botón respectivo de la lista de acciones.</p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -428,5 +474,8 @@ var eliminarDerivados = (id) => {
 
     </div>
 </div>
+
+{{-- Edit Log Derivar --}}
+<div class="modal fade" id="modal_edit_derivar" tabindex="-1" role="dialog" ></div>
 
 @endsection

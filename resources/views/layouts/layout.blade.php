@@ -41,6 +41,8 @@
       <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/ionicons.css')}}">
       <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery.mCustomScrollbar.css')}}">
 
+      <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css')}}">
+
 
       <style>
         .btn-nocolor{
@@ -101,6 +103,16 @@
         .swal2-container, .my-swal {
             z-index: 999999 !important;
         }
+
+        .tablas{
+            width: 100%;
+            border: 1px solid #848484;
+        }
+
+        .tablas td, .tablas th {border: 1px solid #848484;}
+
+        /* .tablas th{background: #dfdfdf} */
+        .tablas tr:hover{background: #f5f5f5}        
       </style>    
 
       @yield('estilo')

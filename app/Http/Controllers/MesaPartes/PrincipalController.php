@@ -50,9 +50,16 @@ class PrincipalController extends Controller
     }
     public function td_folios_view(Request $request, $id)
     {
+        $oficinas = Oficina::select('oficinas.id as id_ofi', 'oficinas.nombre as nom_ofi', 'lugares.id', 'lugares.nombre as nom_lug')
+                                ->join('lugares', 'lugares.id', '=', 'oficinas.lugares_id');
+
         $query = Folioext::join('td_tipos', 'td_tipos.id', '=', 'folioext.td_tipos_id')
                             ->join('log_derivar', 'log_derivar.folioext_id', '=', 'folioext.id')
-                            ->select('*', 'folioext.id as id_folio')
+                            ->join('empleado', 'empleado.id', '=', 'folioext.empid')
+                            ->joinSub($oficinas, 'O', function($join){
+                                $join->on( 'O.id_ofi', '=', 'folioext.c_oficina');
+                            })
+                            ->select('*', 'folioext.id as id_folio', DB::raw('CONCAT(empleado.nombre," ", empleado.apellido) as nombres'), 'nom_ofi', 'nom_lug')
                             ->where('folioext.id', $request->id)->first();
 
         $archivos = Archivoext::where('folioext_id', $request->id)->get();
@@ -126,6 +133,21 @@ class PrincipalController extends Controller
                                         ->where('log_archivo.folioext_id', $request->id)->get();
 
         $view = view('modulos.mesapartes.modals.md_ver_td_folios', compact('query', 'archivos', 'log_derivados', 'log_archivados'))->render();
+
+        return response()->json(['html' => $view]); 
+    }
+
+    public function md_edit_derivar(Request $request)
+    {
+        $query = Logderivarext::join('folioext', 'folioext.id', '=', 'log_derivar.folioext_id')
+                                ->select('log_derivar.id as id_log', 'log_derivar.forma', 'log_derivar.d_oficina', 'log_derivar.obs as obs_log', 'folioext.firma', 'folioext.obs')
+                                ->where('log_derivar.id', $request->id)->first();
+
+        $oficina = Oficina::join('lugares', 'lugares.id', '=', 'oficinas.lugares_id')
+                            ->select( 'oficinas.id', DB::raw('CONCAT(lugares.nombre," | ", oficinas.nombre) as destino_nom'))
+                            ->get();
+
+        $view = view('modulos.mesapartes.modals.md_edit_derivar', compact('query', 'oficina'))->render();
 
         return response()->json(['html' => $view]); 
     }

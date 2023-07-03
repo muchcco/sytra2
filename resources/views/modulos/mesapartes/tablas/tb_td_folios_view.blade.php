@@ -24,7 +24,7 @@
         @endif
     </td>
     <td class="inline">
-        <button type="button" class="btn btn-sm nobtn" ><i class="fa fa-pencil-square-o"></i> Editar</button><br />
+        <button class="btn btn-nocolor bandejTool nobtn" data-toggle="modal" data-target="#large-Modal" onclick="btnEditDerivar('{{ $log->id }}')" ><i class="fa fa-pencil-square-o"></i> Editar</button><br />
         <button class="btn btn-sm nobtn" onclick="eliminarDerivados('{{ $log->id }}')"><i class="fa fa-print text-danger"></i>   Eliminar</button>
     </td>
 </tr>
