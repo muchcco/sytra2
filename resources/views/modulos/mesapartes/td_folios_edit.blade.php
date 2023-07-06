@@ -2,6 +2,30 @@
 
 @section('estilo')
     
+    <style>
+        .input_container {
+        border: 1px solid #e5e5e5;
+        }
+
+        input[type=file]::file-selector-button {
+        background-color: #fff;
+        color: #000;
+        border: 0px;
+        border-right: 1px solid #e5e5e5;
+        padding: 10px 15px;
+        margin-right: 20px;
+        transition: .5s;
+        }
+
+        input[type=file]::file-selector-button:hover {
+        background-color: #fff;
+        border: 0px;
+        border-right: 1px solid #e5e5e5;        
+        }
+
+       
+    </style>
+
 @endsection
 
 @section('script')
@@ -36,8 +60,16 @@
 <script type="text/javascript" src="{{ asset('assets/js/modalEffects.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/classie.js')}}"></script>
 
+<script src="{{ asset('js/knockout-3.5.1.js') }}"></script>
+
+<!-- data-table js -->
+<script src="{{asset('nuevo/plugins/datatables/jquery.dataTables.min.js')}}"></script>
 
 <script>
+
+$(document).ready(function() {
+    carga();
+});
 
 var selca2 = (sdep2) => {
     var ttec=" <?php echo date("d/m/Y");?>";
@@ -55,34 +87,155 @@ var selca2 = (sdep2) => {
     edest.value=tdec+" "+ttec;
 }
 
+var btnEdit = (id) => {
 
-var btnEdit = () => {
-
-    var formData = new FormData();
+    var formData = new FormData();      
+    formData.append("id", id);
+    formData.append("td_tipos_id", $("#td_tipos_id").val());
+    formData.append("cabecera", $("#cabecera").val());
+    formData.append("asunto", $("#asunto").val());
+    formData.append("firma", $("#firma").val());
+    formData.append("nfolios", $("#nfolios").val());
+    if(document.querySelector("#urgente").checked == true){
+        formData.append('urgente', 1)
+    }else{
+        formData.append('urgente', 0)
+    }
+    formData.append("obs", $("#obs").val());
+    formData.append("_token", $("input[name=_token]").val());
         
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        cache: false,
+        url: "{{ route('modulos.mesapartes.editexp') }}",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){
+            console.log(data);
+            window.location.href = "{{ route('modulos.mesapartes.td_folios') }}";
 
-        
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            cache: false,
-            url: "{{ route('modulos.mesapartes.storenuevo') }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(data){
-               console.log(data);
-               window.location.href = "{{ route('modulos.mesapartes.td_folios') }}";
-
-            },
-            error: function(e){
-                console.log("error");
-            }
+        },
+        error: function(e){
+            console.log("error");
+        }
         });
 
 
 }
 
+var btnAddFile = (id) => {
+
+    // var id = "<?php echo $folios['id']?>";
+
+    var file_data = $("#nom_ruta").prop("files")[0];
+    var formData = new FormData();
+    formData.append("nom_ruta", file_data);
+    formData.append("id", id);
+    formData.append("_token", $("input[name=_token]").val());
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        cache: false,
+        url: "{{ route('modulos.mesapartes.storearchivos') }}",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){
+            console.log(data);
+            $("#nom_ruta").val("");
+            carga();
+        },
+        error: function(e){
+            console.log("error");
+        }
+    });
+
+}
+
+function vistaForm() {
+    var self = this;
+
+    self.ver_archivo = function (item) {
+        Ver_Archivo(item);
+    }
+
+    self.eliminar_archivo = function(item){
+        Eliminar_Archivo(item);
+    }
+
+    self.archivos = ko.observableArray();
+}
+
+var vForm = new vistaForm();
+ko.applyBindings(vForm);
+
+
+
+var carga = () => {
+    var id = "<?php echo $folios['id']?>";
+    $.post("{{ route('modulos.mesapartes.tablas.tabladocexpediente') }}",
+            {
+                _token: "{{ csrf_token() }}",
+                id: id
+            },
+            function (data) {
+                vForm.archivos(data);
+                // $("#table_archivos").DataTable({
+                //     "responsive": true,
+                //     info: false,
+                //     paging: false,
+                //     ordering: false,
+                //     searching: false,
+                //     "autoWidth": false,
+                //     language: {"url": "{{ asset('js/Spanish.json')}}"},
+                //     "columns": [
+                //         { "width": "" },
+                //         { "width": "" },
+                //         { "width": "" }
+                //     ]
+                // });
+            }
+    );
+}
+
+var Ver_Archivo =  (item) =>{
+    console.log(item);
+
+    var link = '{{ URL::to('/') }}';
+
+    var ruta = '/archivos/folioext/'+item.año_exp+'/'+item.exp+'/'+item.nombre_archivo;
+
+    var href =  link+ruta;
+
+    var blank = "_blank";
+    window.open(href, blank);
+
+    console.log(link+ruta);
+}
+
+var Eliminar_Archivo =  (item) =>{
+    console.log(item);
+
+    var id = item.id_archivo;
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",        
+        url: "{{ route('modulos.mesapartes.eliminar_archivos') }}",
+        data: { "_token": "{{ csrf_token() }}", id : id },
+        success: function(data){
+            console.log(data);
+            carga();
+        },
+        error: function(e){
+            console.log("error");
+        }
+    });
+
+}
 
 </script>
 
@@ -146,6 +299,7 @@ var btnEdit = () => {
                                     <tr>
                                         <th style="width: 15%">Expediente N°</th>
                                         <td>
+                                            <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
                                             <input type="text" class="form-control" value="{{ $folios->exp }} - {{ $folios->año_exp }}" disabled>
                                         </td>
                                     </tr>
@@ -188,26 +342,58 @@ var btnEdit = () => {
                                             <textarea name="obs" id="obs" rows="5" cols="5" class="form-control" placeholder="Ingresar una observación">{{ $folios->obs }}</textarea>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <th style="width: 15%">Documentos Adjuntos</th>
+                                        <td style="background:#fff;">
+                                            <br />
+                                            <form class="formulario" action="" style="padding-left: 0em;  "  enctype="multipart/form-data">
+                                                <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        {{-- <label for="">Archivos</label> --}}
+                                                        <div class="input_container">
+                                                            <input type="file" name="nom_ruta" id="nom_ruta">
+                                                          </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        {{-- <label for="">Archivos</label> --}}                                                        
+                                                        <button type="button" class="btn btn-sm btn-primary" onclick="btnAddFile('{{ $folios->id }}')"><i class="fa fa-upload"></i> Cargar</button>
+                                                    </div>
+                                                </div>                                            
+                                            </form>
+                                            <br />
+                                            <table class="table table-hover" id="table_archivos">
+                                                <thead>
+                                                    <tr class="bg-dark">
+                                                        <th>Nombre del Documento</th>
+                                                        <th>Archivo</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>                                                
+                                                <tbody data-bind="foreach: archivos">
+                                                    <tr>
+                                                        <td><span data-bind="text: nombre_archivo"></span></td>
+                                                        <td style="text-align: center;"><a data-bind="click: $root.ver_archivo" target="blank" style="cursor:pointer; text-align: center;"><i  class="fa fa-file-pdf-o" aria-hidden="true"></i></a></td>    
+                                                        <td style="text-align: center;">
+                                                            <a data-bind="click: $root.eliminar_archivo" target="blank" style="color:red; cursor:pointer;"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
                                 </table>
-                                
-                                <br />
-                                <form id="FormDocAdj" name="FormDocAdj" enctype="multipart/form-data">
-                                    <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <label class="control-label">Adjuntar archivos</label><br/>
-                                            <div class="input_container">
-                                                <input type="file" id="fileUpload">
-                                            </div>                                                                                            
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <div class="form-group">
-                                                <label class="control-label">.</label><br/>
-                                                    <button class="btn btn-dark  has-dark" id="guardar_doc" type="button" data-bind="click: CargarArchivos"><i class="fa fa-upload" aria-hidden="true"></i>  Cargar</button>
-                                            </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="text-left set-btn">
+                                            <button type="button" class="btn btn-primary waves-effect waves-light  m-t-10 m-r-10" onclick="btnEdit('{{ $folios->id }}')">Modificar
+                                            </button>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>

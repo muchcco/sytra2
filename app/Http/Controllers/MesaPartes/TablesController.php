@@ -64,5 +64,14 @@ class TablesController extends Controller
         return response()->json(['html' => $view]);
     }
 
+    public function tabladocexpediente(Request $request)
+    {
+        $archivos = Archivoext::join('folioext', 'folioext.id', '=', 'archivos_foliosext.folioext_id')
+                                ->select('*', 'archivos_foliosext.id as id_archivo')
+                                ->where('archivos_foliosext.folioext_id', $request->id)->get();
+
+        return $archivos;
+    }
+
     
 }

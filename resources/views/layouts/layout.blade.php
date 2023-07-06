@@ -112,7 +112,10 @@
         .tablas td, .tablas th {border: 1px solid #848484;}
 
         /* .tablas th{background: #dfdfdf} */
-        .tablas tr:hover{background: #f5f5f5}        
+        .tablas tr:hover{background: #f5f5f5}    
+        /* .odd{
+            text-align: center !important;
+        }     */
       </style>    
 
       @yield('estilo')

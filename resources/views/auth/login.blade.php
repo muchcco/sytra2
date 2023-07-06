@@ -125,27 +125,39 @@
                                 <div class="row m-b-20">
                                     <div class="col-md-12">
                                         <h3 class="text-left txt-primary">INICIAR SESION</h3>
+                                        @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="input-group">
                                     <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="Usuario">
-                                    <span class="md-line"></span>
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <span class="md-line">
+                                        
+                                   </span>
                                 </div>
+                                @error('email')
+                                    <div class="input-group">                                        
+                                        <strong class="text-danger">{{ $message }}</strong>                                            
+                                    </div>
+                                @enderror 
                                 <div class="input-group">
-                                    <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Contraseña">
-                                    <span class="md-line"></span>
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Contraseña"><br />                                                           
+                                    <span class="md-line">
+                                        
+                                    </span>
                                 </div>
+                                
+                                @error('password')
+                                    <div class="input-group">                                        
+                                        <strong class="text-danger">{{ $message }}</strong>                                        
+                                    </div>
+                                @enderror    
+                                
+                               
                                 <div class="row m-t-25 text-left">
                                     <div class="col-sm-7 col-xs-12">
                                         <div class="checkbox-fade fade-in-primary">

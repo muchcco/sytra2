@@ -260,7 +260,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2"></label>
                                         <div class="col-sm-10">
-                                            <button type="button" class="btn btn-primary m-b-0" onclick="btnGuardar()">Agregar</button>
+                                            <button type="button" class="btn btn-primary m-b-0" onclick="btnGuardar()">Guardar</button>
                                         </div>
                                     </div>
                                 </form>

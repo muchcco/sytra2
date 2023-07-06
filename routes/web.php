@@ -7,7 +7,6 @@ use App\Http\Controllers\MesaPartes\PrincipalController;
 use App\Http\Controllers\MesaPartes\TablesController;
 use App\Http\Controllers\MesaPartes\AccionesController;
 
-
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
@@ -27,7 +26,9 @@ Route::group(['middleware' => ['auth']], function () {
 
             // TABLAS
             Route::get('/tablas/tb_td_folios.php', [TablesController::class, 'tb_td_folios'])->name('tablas.tb_td_folios');
-            Route::get('/tablas/tb_td_folios_view.php', [TablesController::class, 'tb_td_folios_view'])->name('tablas.tb_td_folios_view');            
+            Route::get('/tablas/tb_td_folios_view.php', [TablesController::class, 'tb_td_folios_view'])->name('tablas.tb_td_folios_view');   
+            
+            Route::post('/tablas/tabladocexpediente', [TablesController::class, 'tabladocexpediente'])->name('tablas.tabladocexpediente');   
 
             // MODALES
             Route::post('/modals/md_archivos_td_folios', [PrincipalController::class, 'md_archivos_td_folios'])->name('modals.md_archivos_td_folios');
@@ -40,9 +41,13 @@ Route::group(['middleware' => ['auth']], function () {
 
             // METODOS GUARDAR ACTUALIZAR ELIMINAR
             Route::post('/storenuevo', [AccionesController::class, 'storenuevo'])->name('storenuevo');
+            Route::post('/editexp', [AccionesController::class, 'editexp'])->name('editexp');
             Route::post('/deletederivado', [AccionesController::class, 'deletederivado'])->name('deletederivado');
 
             Route::post('/edit_logderivar', [AccionesController::class, 'edit_logderivar'])->name('edit_logderivar');
+
+            Route::post('/storearchivos', [AccionesController::class, 'storearchivos'])->name('storearchivos');
+            Route::post('/eliminar_archivos', [AccionesController::class, 'eliminar_archivos'])->name('eliminar_archivos');
         });
     });
 });

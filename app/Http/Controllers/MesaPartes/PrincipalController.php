@@ -79,7 +79,7 @@ class PrincipalController extends Controller
     {
 
         $folios = Folioext::where('id', $id)->first(); 
-        $archivos = Archivoext::where('folioext_id', $id)->first();
+        $archivos = Archivoext::where('folioext_id', $id)->get();
 
         $td_tipos = Tdtipos::where('ext', 1)->orderBy('nombre', 'desc')->get();
 

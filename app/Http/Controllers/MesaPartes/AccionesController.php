@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
 use DateTime;
 use DatePeriod;
 use DateInterval;
+use Illuminate\Support\Facades\URL;
+use File;
 
 use App\Models\User;
 use App\Models\Lugar;
@@ -152,5 +154,73 @@ class AccionesController extends Controller
         $log_derivar->save();
 
         return $log_derivar;
+    }
+
+    public function storearchivos(Request $request)
+    {
+        //BUSCAMOS DATOS DEL EXPEDIENTE
+
+        $exp = Folioext::where('id', $request->id)->first();
+
+        //esructura de carperta
+    
+        $estructura_carp = 'archivos\\folioext\\'.$exp->año_exp.'\\'.$exp->exp;
+    
+        if (!file_exists($estructura_carp)) {
+            mkdir($estructura_carp, 0777, true);
+        }
+
+        //ALMACENAMOS LA INFORMACION
+        $archivos = new Archivoext;
+        $archivos->folioext_id = $request->id;
+        if($request->hasFile('nom_ruta'))
+        {
+            $archivoPDF = $request->file('nom_ruta');
+            $archivoName = $exp->exp.'-'.$archivoPDF->getClientOriginalName();
+            $archivoPDF->move(public_path($estructura_carp), $archivoName);
+
+            $archivos->nombre_archivo = $archivoName;
+        }
+        $archivos->save();
+
+        return $archivos;
+    }
+
+    public function eliminar_archivos(Request $request)
+    {
+
+        $archivo = Archivoext::where('id',  $request->id)->first();
+
+        $exp = Folioext::where('id', $archivo->folioext_id)->first();
+
+        $base = URL::to('/');
+
+        $estructura_carp = '\\archivos\\folioext\\'.$exp->año_exp.'\\'.$exp->exp.'\\'.$archivo->nombre_archivo;
+
+        $archivo_pdf = public_path($estructura_carp);
+    
+        //dd($base.$estructura_carp.$archivo->nombre_archivo);
+        if(File::exists($archivo_pdf)) {
+            File::delete($archivo_pdf);
+          }   
+
+        $deleted_archivo = Archivoext::where('id',  $request->id)->delete();
+        return $deleted_archivo;
+    }
+
+    public function editexp(Request $request)
+    {
+        $folioext = Folioext::findOrFail($request->id);
+        $folioext->td_tipos_id = $request->td_tipos_id;
+        $folioext->cabecera = $request->cabecera;
+        $folioext->asunto = $request->asunto;
+        $folioext->firma = $request->firma;
+        $folioext->nfolios = $request->nfolios;
+        $folioext->urgente = $request->urgente;
+        $folioext->obs = $request->obs;
+        $folioext->save();
+
+        return $folioext;
+
     }
 }
