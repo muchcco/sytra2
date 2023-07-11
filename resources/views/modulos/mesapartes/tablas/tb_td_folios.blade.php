@@ -2,7 +2,14 @@
     <tr class="<?php if($q->urgente === 1 ){  echo "urgente";  } ?>">
         <td><i class="<?php if($q->urgente === 1 ){  echo "icofont icofont-star text-danger ";  } ?>"></i></td>
         <td>{{ $q->nombre }} <br /> {{ $q->exp }} - {{ $q->año_exp }}</td>
-        <td>{{ $q->cabecera }} <br /> Fecha: {{ date("d/m/Y", strtotime($q->fecha)) }} {{ date("g:i A", strtotime($q->fecha)) }} </td>
+        <td>
+            {{ $q->cabecera }} <br /> 
+            @if(date("d/m/Y", strtotime($q->fecha)) === Carbon\Carbon::now()->format('d/m/Y'))
+                Fecha: <strong>Hoy</strong>, a las {{ date("g:i A", strtotime($q->fecha)) }} y {{ date("s", strtotime($q->fecha)) }}s.
+            @else
+                Fecha: {{ date("d/m/Y", strtotime($q->fecha)) }} {{ date("g:i A", strtotime($q->fecha)) }} 
+            @endif
+        </td>
         <td>
             <a href="{{ route('modulos.mesapartes.td_folios_view', $q->id_folio) }}" class="bandejTool btn-cursor"  data-tippy-content="Ver Expediente" >
                 {{ $q->firma }} <br /> {{ $q->asunto }} <br /> {{ $q->obs }} 
@@ -16,12 +23,12 @@
 
                 $diferencia_en_dias = $currentDate->diffInDays($shippingDate);
 
-                $dias = 6 - $diferencia_en_dias;
+                $dias = 7 - $diferencia_en_dias;
                 // var_dump($diferencia_en_dias);  
             ?>
-            @if ( $diferencia_en_dias >= 6 )
+            @if ( $diferencia_en_dias >= 7 )
                 <span class="text-danger">Vencido</span>
-            @elseif( $diferencia_en_dias < 6 )                 
+            @elseif( $diferencia_en_dias < 7 )                 
                 <span class="text-success">{{ $dias }} días</span>
             @endif
         </td>

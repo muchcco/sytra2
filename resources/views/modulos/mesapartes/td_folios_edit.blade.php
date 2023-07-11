@@ -364,7 +364,7 @@ var Eliminar_Archivo =  (item) =>{
                                                 </div>                                            
                                             </form>
                                             <br />
-                                            <table class="table table-hover" id="table_archivos">
+                                            <table class="table table-hover table-bordered" id="table_archivos">
                                                 <thead>
                                                     <tr class="bg-dark">
                                                         <th>Nombre del Documento</th>
@@ -381,6 +381,13 @@ var Eliminar_Archivo =  (item) =>{
                                                         </td>
                                                     </tr>
                                                 </tbody>
+                                                @if($cant_archivos === 0)
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="3"class="text-center text-danger">NO HAY DATOS DISPONIBLES...</td>
+                                                    </tr>
+                                                </tfoot>
+                                                @endif
                                             </table>
                                         </td>
                                     </tr>

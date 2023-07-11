@@ -7,6 +7,10 @@ use App\Http\Controllers\MesaPartes\PrincipalController;
 use App\Http\Controllers\MesaPartes\TablesController;
 use App\Http\Controllers\MesaPartes\AccionesController;
 
+use App\Http\Controllers\ExpInterno\ExpPrincipalController;
+use App\Http\Controllers\ExpInterno\ExpAccionesController;
+use App\Http\Controllers\ExpInterno\ExpTablesController;
+
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
@@ -16,13 +20,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['prefix'=>'modulos/','as'=>'modulos.' ],function () {
 
-        Route::group(['prefix'=>'mesapartes','as'=>'mesapartes.' ],function () {
+        /************************************************* MESA DE PARTES  ******************************************************* */
 
-
-            /************************************************* MESA DE PARTES  ******************************************************* */
+        Route::group(['prefix'=>'mesapartes','as'=>'mesapartes.' ],function () {           
 
             Route::get('/td_nuevo.php', [PrincipalController::class, 'td_nuevo'])->name('td_nuevo');
             Route::get('/td_folios.php', [PrincipalController::class, 'td_folios'])->name('td_folios');
+            Route::get('/td_resumen.php', [PrincipalController::class, 'td_resumen'])->name('td_resumen');
 
             // TABLAS
             Route::get('/tablas/tb_td_folios.php', [TablesController::class, 'tb_td_folios'])->name('tablas.tb_td_folios');
@@ -48,6 +52,30 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::post('/storearchivos', [AccionesController::class, 'storearchivos'])->name('storearchivos');
             Route::post('/eliminar_archivos', [AccionesController::class, 'eliminar_archivos'])->name('eliminar_archivos');
+        });
+
+        /************************************************* EXPEDIENTES INTERNOS  ******************************************************* */
+
+        Route::group(['prefix'=>'expinterno','as'=>'expinterno.' ],function () {
+
+            Route::get('/td_nuevo.php', [ExpPrincipalController::class, 'td_nuevo'])->name('td_nuevo');
+            Route::get('/emitidos.php', [ExpPrincipalController::class, 'emitidos'])->name('emitidos');
+            Route::get('/edit_emitidos.php/{id}', [ExpPrincipalController::class, 'edit_emitidos'])->name('edit_emitidos');
+            Route::get('/view_emitidos.php', [ExpPrincipalController::class, 'view_emitidos'])->name('view_emitidos');
+
+            // TABLAS
+            Route::get('/tablas/tb_emitidos.php', [ExpTablesController::class, 'tb_emitidos'])->name('tablas.tb_emitidos');
+            Route::get('/tablas/tb_emitidos_view.php', [TablesController::class, 'tb_emitidos_view'])->name('tablas.tb_emitidos_view');   
+
+            // MODALES
+            Route::post('/modals/md_em_archivo', [ExpPrincipalController::class, 'md_em_archivo'])->name('modals.md_em_archivo');
+
+            // METODOS GUARDAR ACTUALIZAR ELIMINAR
+            Route::post('/storenuevo', [ExpAccionesController::class, 'storenuevo'])->name('storenuevo');
+
+            Route::post('/storearchivos', [ExpAccionesController::class, 'storearchivos'])->name('storearchivos');
+            Route::post('/eliminar_archivos', [ExpAccionesController::class, 'eliminar_archivos'])->name('eliminar_archivos');
+
         });
     });
 });

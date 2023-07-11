@@ -454,7 +454,7 @@ var btnModificarDerivar = (id) => {
                                         <br />
                                         <ul>
                                             <li><a href=""><i class="icofont icofont-refresh text-success" ></i> Refrescar página</a></li>
-                                            <li><a href=""><i class="icofont icofont-edit text-default" ></i> Modificar folio</a></li>
+                                            <li><a href="{{ route('modulos.mesapartes.td_folios_edit', $query->id_folio) }}"><i class="icofont icofont-edit text-default" ></i> Modificar folio</a></li>
                                             <li><a href=""><i class="icofont icofont-close-circled text-danger"></i> Eliminar folio.</a></li>
                                             <li><a href=""><i class="icofont icofont-print text-primary" ></i> Cargo</a></li>
                                             <li><a href=""><i class="icofont icofont-print text-primary" ></i> Imprimir</a></li>

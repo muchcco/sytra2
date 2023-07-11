@@ -137,7 +137,7 @@ var verExpediente = (id) => {
                         <!-- Product list card start -->
                         <div class="card product-add-modal">
                             <div class="card-header">
-                                <h5>Product List</h5>
+                                <h5>Expedientes Recientes</h5>
                                 {{-- <a href="{{ route('modulos.mesapartes.td_nuevo') }}" class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger" data-modal="modal-13"> <i class="icofont icofont-plus m-r-5"></i> Nuevo Archivo --}}
                                 </a>
                             </div>

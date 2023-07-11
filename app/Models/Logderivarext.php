@@ -11,7 +11,24 @@ class Logderivarext extends Model
 
     protected $table = 'log_derivar';
 
-    protected $fillable = [ 'id', 'tipo', 'forma', 'obs', 'fecha', 'user', 'empid', 'd_oficina', 'atendido', 'recibido', 'file', 'ext', 'size', 'prevei', 'c_oficina', 'folioext_id'];
+    protected $fillable = [ 
+                            'id', 
+                            'tipo', 
+                            'forma', 
+                            'obs', 
+                            'fecha', 
+                            'user', 
+                            'empid', 
+                            'd_oficina', 
+                            'atendido', 
+                            'recibido', 
+                            'file', 
+                            'ext', 
+                            'size', 
+                            'prevei', 
+                            'c_oficina', 
+                            'folioext_id'
+                        ];
 
     public $timestamps = false;
 }

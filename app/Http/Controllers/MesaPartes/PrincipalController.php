@@ -81,6 +81,10 @@ class PrincipalController extends Controller
         $folios = Folioext::where('id', $id)->first(); 
         $archivos = Archivoext::where('folioext_id', $id)->get();
 
+        $cant_archivos = count($archivos);
+
+        // dd($cant_archivos);
+
         $td_tipos = Tdtipos::where('ext', 1)->orderBy('nombre', 'desc')->get();
 
         $oficinas = DB::table('oficinas as o')
@@ -91,7 +95,14 @@ class PrincipalController extends Controller
                         ->get();
 
 
-        return view('modulos.mesapartes.td_folios_edit', compact('folios', 'archivos', 'td_tipos', 'oficinas'));
+        return view('modulos.mesapartes.td_folios_edit', compact('folios', 'archivos', 'td_tipos', 'oficinas', 'cant_archivos'));
+    }
+
+    public function td_resumen(Request $request)
+    {
+        
+        $query = DB::select("CALL SP_resumen_registro_mp");
+        return view('modulos.mesapartes.td_resumen', compact('query'));
     }
 
 

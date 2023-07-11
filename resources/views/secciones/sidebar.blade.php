@@ -35,31 +35,24 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/mesapartes/td_resumen.php*')) active @endif">
+                        <a href="{{ route('modulos.mesapartes.td_resumen') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.compact">Resumen</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
-                            <span class="pcoded-micon"><i class="icon-chart"></i></span>
-                            <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Requisito</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
                 </ul>
             </li>
-            <li class=" pcoded-hasmenu">
+            <li class=" pcoded-hasmenu @if (Request::is('modulos/expinterno*')) active pcoded-trigger @endif "">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                     <span class="pcoded-mtext">Expedientes de Internos</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="l">
+                    <li class="@if (Request::is('modulos/expinterno/td_nuevo.php')) active @endif">
+                        <a href="{{ route('modulos.expinterno.td_nuevo') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.static-layout">Nuevo</span>
                             <span class="pcoded-mcaret"></span>
@@ -79,8 +72,8 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expinterno/emitidos.php')) active @endif">
+                        <a href="{{ route('modulos.expinterno.emitidos') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Emitidos</span>
                             <span class="pcoded-mcaret"></span>
