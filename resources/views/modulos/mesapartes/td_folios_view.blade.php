@@ -316,7 +316,7 @@ var btnModificarDerivar = (id) => {
                                                                     <tr>
                                                                         <th width="200">N° Interno	</th>
                                                                         <th width="10">:</th>
-                                                                        <td>{{$query->nombre }} {{ $query->exp }} - {{ $query->año_exp }}</td>
+                                                                        <td>{{$query->nom_tipdoc }} {{ $query->exp }} - {{ $query->año_exp }}</td>
                                                                     </tr>
                                                                 </table>
                                                                 <h5>Documentos Adjuntos</h5>

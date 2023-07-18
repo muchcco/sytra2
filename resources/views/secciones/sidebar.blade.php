@@ -58,21 +58,21 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expinterno/xrecibir.php*')) active @endif">
+                        <a href="{{ route('modulos.expinterno.xrecibir')}}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.header-fixed">Por recibir</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expinterno/recibido.php*')) active @endif">
+                        <a href="{{ route('modulos.expinterno.recibido')}}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.compact">Recibidos</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="@if (Request::is('modulos/expinterno/emitidos.php')) active @endif">
+                    <li class="@if (Request::is('modulos/expinterno/emitidos.php*')) active @endif">
                         <a href="{{ route('modulos.expinterno.emitidos') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Emitidos</span>

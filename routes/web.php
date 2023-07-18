@@ -58,23 +58,54 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::group(['prefix'=>'expinterno','as'=>'expinterno.' ],function () {
 
+            /*=================== REGISTROS ================== */
+
             Route::get('/td_nuevo.php', [ExpPrincipalController::class, 'td_nuevo'])->name('td_nuevo');
+            Route::get('/xrecibir.php', [ExpPrincipalController::class, 'xrecibir'])->name('xrecibir');
+            Route::get('/recibido.php', [ExpPrincipalController::class, 'recibido'])->name('recibido');            
+
+            // EMITIDOS
             Route::get('/emitidos.php', [ExpPrincipalController::class, 'emitidos'])->name('emitidos');
-            Route::get('/edit_emitidos.php/{id}', [ExpPrincipalController::class, 'edit_emitidos'])->name('edit_emitidos');
-            Route::get('/view_emitidos.php', [ExpPrincipalController::class, 'view_emitidos'])->name('view_emitidos');
+            Route::get('/emitidos.php/edit_emitidos.php/{id}', [ExpPrincipalController::class, 'edit_emitidos'])->name('edit_emitidos');
+            Route::get('/emitidos.php/view_emitidos.php/{id}', [ExpPrincipalController::class, 'view_emitidos'])->name('view_emitidos');
 
-            // TABLAS
+            /*=================== TABLAS ================== */
+
+            //XRECIBIR
+            Route::get('/tablas/tb_xrecibir.php', [ExpTablesController::class, 'tb_xrecibir'])->name('tablas.tb_xrecibir');
+            Route::post('/tablas/tb_derivar.php', [ExpTablesController::class, 'tb_derivar'])->name('tablas.tb_derivar');
+
+            //RECIBIDO
+            Route::get('/tablas/tb_recibido.php', [ExpTablesController::class, 'tb_recibido'])->name('tablas.tb_recibido');
+
+            //EMITIDOS
             Route::get('/tablas/tb_emitidos.php', [ExpTablesController::class, 'tb_emitidos'])->name('tablas.tb_emitidos');
-            Route::get('/tablas/tb_emitidos_view.php', [TablesController::class, 'tb_emitidos_view'])->name('tablas.tb_emitidos_view');   
+            Route::get('/tablas/tb_emitidos_view.php', [ExpTablesController::class, 'tb_emitidos_view'])->name('tablas.tb_emitidos_view');            
+            Route::get('/tablas/tb_emitidos_derivar_view.php', [ExpTablesController::class, 'tb_emitidos_derivar_view'])->name('tablas.tb_emitidos_derivar_view');
+            Route::get('/tablas/tb_emitidos_archivar_view.php', [ExpTablesController::class, 'tb_emitidos_archivar_view'])->name('tablas.tb_emitidos_archivar_view');
+            Route::post('/tablas/tb_edit_file', [ExpTablesController::class, 'tb_edit_file'])->name('tablas.tb_edit_file');   
 
-            // MODALES
+            /*=================== MODALES ================== */
+            // EMITIDOS
             Route::post('/modals/md_em_archivo', [ExpPrincipalController::class, 'md_em_archivo'])->name('modals.md_em_archivo');
+            Route::post('/modals/md_edit_derivar', [ExpPrincipalController::class, 'md_edit_derivar'])->name('modals.md_edit_derivar');
 
-            // METODOS GUARDAR ACTUALIZAR ELIMINAR
+            //RECIBIDO
+            Route::post('/modals/md_rec_derivar', [ExpPrincipalController::class, 'md_rec_derivar'])->name('modals.md_rec_derivar');
+
+            /*=================== METODOS GUARDAR ACTUALIZAR ELIMINAR ================== */
+            
             Route::post('/storenuevo', [ExpAccionesController::class, 'storenuevo'])->name('storenuevo');
 
+            // EMITIDOS
+            Route::post('/update_emitidos', [ExpAccionesController::class, 'update_emitidos'])->name('update_emitidos');
             Route::post('/storearchivos', [ExpAccionesController::class, 'storearchivos'])->name('storearchivos');
             Route::post('/eliminar_archivos', [ExpAccionesController::class, 'eliminar_archivos'])->name('eliminar_archivos');
+            Route::post('/deletederivado', [ExpAccionesController::class, 'deletederivado'])->name('deletederivado');
+            Route::post('/edit_logderivar', [ExpAccionesController::class, 'edit_logderivar'])->name('edit_logderivar');
+
+            //XRECIBIR
+            Route::post('/recibir_exp', [ExpAccionesController::class, 'recibir_exp'])->name('recibir_exp');
 
         });
     });

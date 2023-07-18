@@ -11,7 +11,7 @@ class Archivoint extends Model
 
     protected $table = 'archivos_foliosint';
 
-    protected $fillable = [ 'folioint_id','nombre_archivo', 'ubicacion', 'ext', 'size'];
+    protected $fillable = [ 'folioint_id', 'tipo_log', 'nombre_archivo', 'ubicacion', 'ext', 'size'];
 
     //public $timestamps = false;
 }

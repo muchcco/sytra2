@@ -9,7 +9,7 @@ class Logarchivadoint extends Model
 {
     use HasFactory;
 
-    protected $table = 'log_archivoint';
+    protected $table = 'log_archivo_int';
 
     protected $fillable = [ 'id', 'tipo', 'forma', 'obs', 'fecha', 'user', 'empid', 'file', 'ext', 'size', 'prevei', 'c_oficina', 'folioint_id'];
 

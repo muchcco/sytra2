@@ -15,7 +15,6 @@
                 {{ $q->firma }} <br /> {{ $q->asunto }} <br /> {{ $q->obs }} 
             </a>  
         </td>
-        <td>{{ $q->nom_oficina_inicio }} <br /> {{ $q->nom_empleado }} <br /> <span class="text-danger"><?php  if($q->urgente === 1 ){  echo "prioridad";  } ?></span> </td>
         <td>
             <?php
                 $currentDate = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));

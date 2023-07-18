@@ -11,7 +11,7 @@ class Archivoext extends Model
 
     protected $table = 'archivos_foliosext';
 
-    protected $fillable = [ 'folioext_id','nombre_archivo', 'ubicacion', 'ext', 'size'];
+    protected $fillable = [ 'folioext_id', 'tipo_log', 'nombre_archivo', 'ubicacion', 'ext', 'size'];
 
     //public $timestamps = false;
 }

@@ -46,7 +46,7 @@ var table_derivar = () => {
 
     $.ajax({
         type: 'GET',
-        url: "{{ route('modulos.expinterno.tablas.tb_td_emitidos_view') }}" ,
+        url: "{{ route('modulos.expinterno.tablas.tb_emitidos_derivar_view') }}" ,
         dataType: "json",
         data: {id:id},
         success: function(data){
@@ -73,47 +73,15 @@ var table_derivar = () => {
                     { "width": "" }
                 ]
             });
+        },
+        error: function(){
+            alert("falla en la tabla");
+            document.getElementById("tabla-red").style.display = "none";
+            document.getElementById("dow-table-der").style.display = "block";
         }
     });
 }
 
-var tabla = $("#table_log_derivar").DataTable();
-var table_derivar = () => {
-    var id = "<?php echo $query['id_folio']?>";
-    console.log(id);
-
-    $.ajax({
-        type: 'GET',
-        url: "{{ route('modulos.expinterno.tablas.tb_td_emitidos_view') }}" ,
-        dataType: "json",
-        data: {id:id},
-        success: function(data){
-            document.getElementById("tabla-red").style.display = "block";
-            document.getElementById("dow-table-der").style.display = "none";
-            tabla.destroy();
-            $("#table_log_derivar_body").html(data.html);
-            tabla = $("#table_log_derivar").DataTable({
-                "responsive": true,
-                info: false,
-                paging: false,
-                ordering: false,
-                searching: false,
-                "autoWidth": false,
-                language: {"url": "{{ asset('js/Spanish.json')}}"},
-                "columns": [
-                    { "width": "" },
-                    { "width": "" },
-                    { "width": "" },
-                    { "width": "" },
-                    { "width": "" },
-                    { "width": "" },
-                    { "width": "" },
-                    { "width": "" }
-                ]
-            });
-        }
-    });
-}
 
 /******************************************************* MODAL VER DOCUMENTOS ADETALLLE **************************************************************/
 
@@ -268,17 +236,6 @@ var btnModificarDerivar = (id) => {
                                                                             <td>{{$query->obs }}</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <th width="200">Pago</th>
-                                                                            <th width="10">:</th>
-                                                                            <td>
-                                                                                @if( $query->pago === 0)
-                                                                                    NO
-                                                                                @elseif($query->pago === 1)
-                                                                                    SI
-                                                                                @endif
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
                                                                             <th width="200">Prioridad</th>
                                                                             <th width="10">:</th>
                                                                             <td class="<?php  if($query->urgente === 1 ){  echo "urgente";  } ?>">
@@ -316,7 +273,7 @@ var btnModificarDerivar = (id) => {
                                                                     <tr>
                                                                         <th width="200">N° Interno	</th>
                                                                         <th width="10">:</th>
-                                                                        <td>{{$query->nombre }} {{ $query->exp }} - {{ $query->año_exp }}</td>
+                                                                        <td>{{$query->nom_tipdoc }} {{ $query->exp }} - {{ $query->año_exp }}</td>
                                                                     </tr>
                                                                 </table>
                                                                 <h5>Documentos Adjuntos</h5>
@@ -454,7 +411,7 @@ var btnModificarDerivar = (id) => {
                                         <br />
                                         <ul>
                                             <li><a href=""><i class="icofont icofont-refresh text-success" ></i> Refrescar página</a></li>
-                                            <li><a href="{{ route('modulos.expinterno.td_folios_edit', $query->id_folio) }}"><i class="icofont icofont-edit text-default" ></i> Modificar folio</a></li>
+                                            <li><a href="{{ route('modulos.expinterno.edit_emitidos', $query->id_folio) }}"><i class="icofont icofont-edit text-default" ></i> Modificar folio</a></li>
                                             <li><a href=""><i class="icofont icofont-close-circled text-danger"></i> Eliminar folio.</a></li>
                                             <li><a href=""><i class="icofont icofont-print text-primary" ></i> Cargo</a></li>
                                             <li><a href=""><i class="icofont icofont-print text-primary" ></i> Imprimir</a></li>

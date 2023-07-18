@@ -124,6 +124,7 @@ class AccionesController extends Controller
                     $archivo->move(public_path($estructura_carp), $archivoName);
     
                     $archivo = new Archivoext;
+                    $archivo->tipo_log = 'folioext';
                     $archivo->folioext_id = $save->id;
                     $archivo->nombre_archivo = $archivoName;
                     $archivo->ubicacion = $estructura_carp;
@@ -172,6 +173,7 @@ class AccionesController extends Controller
 
         //ALMACENAMOS LA INFORMACION
         $archivos = new Archivoext;
+        $archivo->tipo_log = 'folioext';
         $archivos->folioext_id = $request->id;
         if($request->hasFile('nom_ruta'))
         {

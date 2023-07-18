@@ -58,7 +58,6 @@ var table_folios = () => {
                     { "width": "" },
                     { "width": "" },
                     { "width": "" },
-                    { "width": "" },
                     { "width": "" }
                 ]
             });
@@ -151,7 +150,6 @@ var verExpediente = (id) => {
                                                     <th>Número Interno</th>
                                                     <th>Cabecera y Fecha</th>
                                                     <th>Firma, asunto y observaciones</th>
-                                                    <th>Oficina de creación</th>
                                                     <th>Vence en</th>
                                                     <th>Adjunto</th>
                                                     <th>Acciones</th>

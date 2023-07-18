@@ -108,7 +108,7 @@ var btnEdit = (id) => {
         type: "POST",
         dataType: "json",
         cache: false,
-        url: "{{ route('modulos.mesapartes.editexp') }}",
+        url: "{{ route('modulos.expinterno.update_emitidos') }}",
         data: formData,
         processData: false,
         contentType: false,
@@ -133,6 +133,7 @@ var btnAddFile = (id) => {
     var formData = new FormData();
     formData.append("nom_ruta", file_data);
     formData.append("id", id);
+    formData.append("tipo_log", "folioint");
     formData.append("_token", $("input[name=_token]").val());
 
     $.ajax({
@@ -176,7 +177,7 @@ ko.applyBindings(vForm);
 
 var carga = () => {
     var id = "<?php echo $folios['id']?>";
-    $.post("{{ route('modulos.expinterno.tablas.tabladocexpediente') }}",
+    $.post("{{ route('modulos.expinterno.tablas.tb_edit_file') }}",
             {
                 _token: "{{ csrf_token() }}",
                 id: id

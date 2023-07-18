@@ -74,7 +74,8 @@
         background:#75c1ff url("{{ asset('assets/images/urgente.png') }}") no-repeat top left;
         }
         .table tbody td, .table thead th {
-        font-size: .88em;
+            vertical-align: middle !important;
+            font-size: .88em;
         }
 
         .btn-cursor{cursor: pointer;color: blue !important; font-size: 1em;}
@@ -98,6 +99,10 @@
             padding: .5em !important;
             margin: .2em !important;
             vertical-align: middle !important;
+        }
+
+        .popupp-class{
+            z-index: 999999 !important;
         }
 
         .swal2-container, .my-swal {
@@ -212,7 +217,7 @@
 <script type="text/javascript" src="{{ asset('bower_components/modernizr/js/modernizr.js')}}"></script>
 <script type="text/javascript" src="{{ asset('bower_components/modernizr/js/css-scrollbars.js')}}"></script>
 <!-- classie js -->
-<script type="text/javascript" src="{{ asset('bower_components/classie/js/classie.js')}}"></script>    
+<script type="text/javascript" src="{{ asset('bower_components/classie/js/classie.js')}}"></script>
 <!-- i18next.min.js -->
 <script type="text/javascript" src="{{ asset('bower_components/i18next/js/i18next.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js')}}"></script>

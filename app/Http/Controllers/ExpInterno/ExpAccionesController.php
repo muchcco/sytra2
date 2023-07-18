@@ -49,6 +49,14 @@ class ExpAccionesController extends Controller
             }else{
                 $codexp = '00000001';
             }            
+
+            // OBETENEMOS EL CODIGO DE OFICINA DEL USUARIO LOGEADO
+
+            $c_oficina = Empleado::join('oficinas', 'oficinas.id', '=', 'empleado.oficinas_id')
+                                    ->select('empleado.*', 'oficinas.id as id_oficina')
+                                    ->where('empleado.id', auth()->user()->empleado_id)
+                                    ->first();
+
             $save = new Folioint;
             $save->exp =  $codexp;
             $save->año_exp = $año_act;
@@ -60,7 +68,7 @@ class ExpAccionesController extends Controller
             $save->fecha = Carbon::now();
             $save->user = auth()->user()->id;
             $save->empid = auth()->user()->empleado_id;
-            $save->c_oficina = $request->nfolios;
+            $save->c_oficina = $c_oficina->id_oficina;
             $save->obs = $request->obs;
             $save->aid = $request->d_oficina;
             $save->td_tipos_id = $request->td_tipos_id;
@@ -87,7 +95,7 @@ class ExpAccionesController extends Controller
                 $log->empid = auth()->user()->empleado_id;
                 $log->fecha = Carbon::now();                
                 $log->d_oficina = $arreglo[$i];                
-                $log->folioext_id = $save->id;
+                $log->folioint_id = $save->id;
                 $log->save();                
             }
     
@@ -107,7 +115,8 @@ class ExpAccionesController extends Controller
                     $archivo->move(public_path($estructura_carp), $archivoName);
     
                     $archivo = new Archivoint;
-                    $archivo->folioext_id = $save->id;
+                    $archivo->tipo_log = 'folioint';
+                    $archivo->folioint_id = $save->id;
                     $archivo->nombre_archivo = $archivoName;
                     $archivo->ubicacion = $estructura_carp;
                     $archivo->save();
@@ -122,32 +131,46 @@ class ExpAccionesController extends Controller
 
     public function storearchivos(Request $request)
     {
-        //BUSCAMOS DATOS DEL EXPEDIENTE
+        try {
 
-        $exp = Folioint::where('id', $request->id)->first();
+            //BUSCAMOS DATOS DEL EXPEDIENTE
+            // dd($request->tipo_log);
+            $exp = Folioint::where('id', $request->id)->first();
 
-        //esructura de carperta
-    
-        $estructura_carp = 'archivos\\folioint\\'.$exp->año_exp.'\\'.$exp->exp;
-    
-        if (!file_exists($estructura_carp)) {
-            mkdir($estructura_carp, 0777, true);
+            //esructura de carperta
+        
+            $estructura_carp = 'archivos\\folioint\\'.$exp->año_exp.'\\'.$exp->exp;
+        
+            if (!file_exists($estructura_carp)) {
+                mkdir($estructura_carp, 0777, true);
+            }
+
+            //ALMACENAMOS LA INFORMACION
+            $archivos = new Archivoint;
+            $archivos->tipo_log = $request->tipo_log;
+            $archivos->folioint_id = $request->id;
+            if($request->hasFile('nom_ruta'))
+            {
+                $archivoPDF = $request->file('nom_ruta');
+                $archivoName = $exp->exp.'-'.$archivoPDF->getClientOriginalName();
+                $archivoPDF->move(public_path($estructura_carp), $archivoName);
+
+                $archivos->nombre_archivo = $archivoName;
+            }
+            $archivos->save();
+
+            return $archivos;
+
+        } catch (\Exception $e) {
+            //Si existe algún error en la Transacción
+            $response_ = response()->json([
+                'data' => null,
+                'error' => $e->getMessage(),
+                'message' => 'BAD'
+            ], 400);
+
+            return $response_;
         }
-
-        //ALMACENAMOS LA INFORMACION
-        $archivos = new Archivoint;
-        $archivos->folioext_id = $request->id;
-        if($request->hasFile('nom_ruta'))
-        {
-            $archivoPDF = $request->file('nom_ruta');
-            $archivoName = $exp->exp.'-'.$archivoPDF->getClientOriginalName();
-            $archivoPDF->move(public_path($estructura_carp), $archivoName);
-
-            $archivos->nombre_archivo = $archivoName;
-        }
-        $archivos->save();
-
-        return $archivos;
     }
 
     public function eliminar_archivos(Request $request)
@@ -155,7 +178,7 @@ class ExpAccionesController extends Controller
 
         $archivo = Archivoint::where('id',  $request->id)->first();
 
-        $exp = Folioint::where('id', $archivo->folioext_id)->first();
+        $exp = Folioint::where('id', $archivo->folioint_id)->first();
 
         $base = URL::to('/');
 
@@ -170,5 +193,48 @@ class ExpAccionesController extends Controller
 
         $deleted_archivo = Archivoint::where('id',  $request->id)->delete();
         return $deleted_archivo;
+    }
+
+    public function deletederivado(Request $request)
+    {
+        $deleted_lg_derivar= Logderivarint::where('id',  $request->id)->delete();
+
+        return $deleted_lg_derivar;
+    }
+
+    public function edit_logderivar(Request $request)
+    {
+        $log_derivar = Logderivarint::findOrFail($request->id);
+        $log_derivar->forma = $request->forma;
+        $log_derivar->d_oficina = $request->d_oficina;
+        $log_derivar->obs = $request->obs;
+        $log_derivar->save();
+
+        return $log_derivar;
+    }
+
+    public function update_emitidos(Request $request)
+    {
+        $folioext = Folioint::findOrFail($request->id);
+        $folioext->td_tipos_id = $request->td_tipos_id;
+        $folioext->cabecera = $request->cabecera;
+        $folioext->asunto = $request->asunto;
+        $folioext->firma = $request->firma;
+        $folioext->nfolios = $request->nfolios;
+        $folioext->urgente = $request->urgente;
+        $folioext->obs = $request->obs;
+        $folioext->save();
+
+        return $folioext;
+
+    }
+
+    public function recibir_exp(Request $request)
+    {
+        $recibir_exp = Logderivarint::findOrFail($request->id);
+        $recibir_exp->recibido = 1;
+        $recibir_exp->save();
+
+        return $recibir_exp;
     }
 }

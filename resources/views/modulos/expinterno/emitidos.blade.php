@@ -57,7 +57,6 @@ var table_emitidos = () => {
                     { "width": "" },
                     { "width": "" },
                     { "width": "" },
-                    { "width": "" },
                     { "width": "" }
                 ]
             });
@@ -69,14 +68,14 @@ var table_emitidos = () => {
     });
 }
 
-var btnModalArchivos = (id) => {
+var btnModalArchivos = (id, tipo_log) => {
     console.log(id);
 
     $.ajax({
         type:'post',
         url: "{{ route('modulos.expinterno.modals.md_em_archivo') }}",
         dataType: "json",
-        data:{"_token": "{{ csrf_token() }}", id : id},
+        data:{"_token": "{{ csrf_token() }}", id : id, tipo_log:tipo_log},
         success:function(data){
             $("#modal_ver_archivo").html(data.html);
             $("#modal_ver_archivo").modal('show');
@@ -137,7 +136,6 @@ var btnModalArchivos = (id) => {
                                                     <th>Número Interno</th>
                                                     <th>Cabecera y Fecha</th>
                                                     <th>Firma, asunto y observaciones</th>
-                                                    <th>Oficina de creación</th>
                                                     <th>Adjunto</th>
                                                     <th>Acciones</th>
                                                 </tr>
