@@ -62,6 +62,7 @@ class ExpAccionesController extends Controller
             $save->año_exp = $año_act;
             $save->mes_exp = $mes_act;
             $save->asunto = $request->asunto;
+            $save->num_doc = $request->n_doc;
             $save->cabecera = $request->cabecera;
             $save->firma = $request->firma;
             $save->nfolios = $request->nfolios;

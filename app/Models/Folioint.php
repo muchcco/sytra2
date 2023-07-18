@@ -18,6 +18,7 @@ class Folioint extends Model
                             'mes_exo', 
                             'asunto',
                             'firma', 
+                            'num_doc',
                             'nfolio', 
                             'fecha', 
                             'user', 

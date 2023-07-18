@@ -71,20 +71,39 @@ $(document).ready(function() {
     carga();
 });
 
-var selca2 = (sdep2) => {
-    var ttec=" <?php echo date("d/m/Y");?>";
+function num_doc(ndoc){
+    console.log(ndoc);
+    var ttec=" <?php echo date("Y");?>";
+    var siglas = "<?php echo $c_oficina['siglas']?>"
     var edest=document.getElementById("cabecera");
+    var n_doc = document.getElementById("n_doc");
     var myselect=document.getElementById("td_tipos_id");
     var imsel=0;
-    for (var i=0; i<myselect.options.length; i++){
-        if (myselect.options[i].value==sdep2){
-            imsel=i;
-            break
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('modulos.expinterno.buscar_ndoc') }}",
+        data:{"_token": "{{ csrf_token() }}", ndoc : ndoc},
+        success: function(response){
+            console.log(response);                
+            for (var i=0; i<myselect.options.length; i++){
+                if (myselect.options[i].value==ndoc){
+                    imsel=i;
+                    break
+                }
+            }
+            var tdec=myselect.options[imsel].text;
+            if(tdec=="Otro...") tdec="(Especifique)";
+            edest.value=tdec+" N° "+response+"-"+ttec+"/"+siglas+"/"+"MDA";
+            n_doc.value = response;
+        },
+        error: function(jqxhr,textStatus,errorThrown){
+            console.log(jqxhr);
+            console.log(textStatus);
+            console.log(errorThrown);
+            //location.reload();
         }
-    }
-    var tdec=myselect.options[imsel].text;
-    if(tdec=="Otro...") tdec="(Especifique)";
-    edest.value=tdec+" "+ttec;
+    });
 }
 
 var btnEdit = (id) => {
@@ -290,7 +309,7 @@ var Eliminar_Archivo =  (item) =>{
                                     <tr>
                                         <th style="width: 15%">Tipo</th>
                                         <td>
-                                            <select name="td_tipos_id" id="td_tipos_id" class="form-control form-control-inverse" onchange="selca2(this.value);">
+                                            <select name="td_tipos_id" id="td_tipos_id" class="form-control form-control-inverse" onchange="num_doc(this.value);">
                                                 @foreach ($td_tipos as $t)
                                                     <option value="{{ $t->id }}" {{ $t->id == $folios->td_tipos_id ? 'selected' : '' }} >{{ $t->nombre }}</option>
                                                 @endforeach
@@ -302,6 +321,7 @@ var Eliminar_Archivo =  (item) =>{
                                         <td>
                                             <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
                                             <input type="text" class="form-control" value="{{ $folios->exp }} - {{ $folios->año_exp }}" disabled>
+                                            <input type="hidden" class="form-control" id="n_doc" name="n_doc" value="">
                                         </td>
                                     </tr>
                                     <tr>

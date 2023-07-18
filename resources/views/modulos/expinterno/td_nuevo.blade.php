@@ -57,20 +57,57 @@
 
 
 <script>
-    function selca2(sdep2){
-        var ttec=" <?php echo date("d/m/Y");?>";
+    // function selca2(sdep2){
+    //     var ttec=" <?php echo date("d/m/Y");?>";
+    //     var edest=document.getElementById("cabecera");
+    //     var myselect=document.getElementById("td_tipos_id");
+    //     var imsel=0;
+    //     for (var i=0; i<myselect.options.length; i++){
+    //         if (myselect.options[i].value==sdep2){
+    //             imsel=i;
+    //             break
+    //         }
+    //     }
+    //     var tdec=myselect.options[imsel].text;
+    //     if(tdec=="Otro...") tdec="(Especifique)";
+    //     edest.value=tdec+" "+ttec;
+        
+    //     console.log(myselect);
+    // }
+
+    function num_doc(ndoc){
+        console.log(ndoc);
+        var ttec=" <?php echo date("Y");?>";
+        var siglas = "<?php echo $c_oficina['siglas']?>"
         var edest=document.getElementById("cabecera");
+        var n_doc = document.getElementById("n_doc");
         var myselect=document.getElementById("td_tipos_id");
         var imsel=0;
-        for (var i=0; i<myselect.options.length; i++){
-            if (myselect.options[i].value==sdep2){
-                imsel=i;
-                break
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "{{ route('modulos.expinterno.buscar_ndoc') }}",
+            data:{"_token": "{{ csrf_token() }}", ndoc : ndoc},
+            success: function(response){
+                console.log(response);                
+                for (var i=0; i<myselect.options.length; i++){
+                    if (myselect.options[i].value==ndoc){
+                        imsel=i;
+                        break
+                    }
+                }
+                var tdec=myselect.options[imsel].text;
+                if(tdec=="Otro...") tdec="(Especifique)";
+                edest.value=tdec+" N° "+response+"-"+ttec+"/"+siglas+"/"+"MDA";
+                n_doc.value = response;
+            },
+            error: function(jqxhr,textStatus,errorThrown){
+                console.log(jqxhr);
+                console.log(textStatus);
+                console.log(errorThrown);
+                //location.reload();
             }
-        }
-        var tdec=myselect.options[imsel].text;
-        if(tdec=="Otro...") tdec="(Especifique)";
-        edest.value=tdec+" "+ttec;
+        });
     }
 
     function btnGuardar() {
@@ -89,6 +126,7 @@
         formData.append("asunto", $("#asunto").val());
         formData.append("firma", $("#firma").val());
         formData.append("nfolios", $("#nfolios").val());
+        formData.append("n_doc", $("#n_doc").val());
         formData.append("d_oficina", $("#d_oficina").val());
         // formData.append("urgente", $("#urgente").val());
         if(document.querySelector("#urgente").checked == true){
@@ -168,7 +206,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Tipo:</label>
                                         <div class="col-sm-10">
-                                            <select name="td_tipos_id" id="td_tipos_id" class="form-control form-control-inverse" onchange="selca2(this.value);">
+                                            <select name="td_tipos_id" id="td_tipos_id" class="form-control form-control-inverse" onchange="num_doc(this.value);">
                                                 @foreach ($td_tipos as $t)
                                                     <option value="{{ $t->id }}">{{ $t->nombre }}</option>
                                                 @endforeach
@@ -179,7 +217,8 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Cabecera:</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="cabecera" name="cabecera" value="Solicitud <?php echo date("d/m/Y");?>">
+                                            <input type="text" class="form-control" id="cabecera" name="cabecera" value="">
+                                            <input type="hidden" class="form-control" id="n_doc" name="n_doc" value="">
                                             <span class="messages"></span>
                                         </div>
                                     </div>

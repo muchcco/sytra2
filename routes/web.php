@@ -61,8 +61,12 @@ Route::group(['middleware' => ['auth']], function () {
             /*=================== REGISTROS ================== */
 
             Route::get('/td_nuevo.php', [ExpPrincipalController::class, 'td_nuevo'])->name('td_nuevo');
+            Route::post('/buscar_ndoc.php', [ExpPrincipalController::class, 'buscar_ndoc'])->name('buscar_ndoc');
+
+
             Route::get('/xrecibir.php', [ExpPrincipalController::class, 'xrecibir'])->name('xrecibir');
             Route::get('/recibido.php', [ExpPrincipalController::class, 'recibido'])->name('recibido');            
+            
 
             // EMITIDOS
             Route::get('/emitidos.php', [ExpPrincipalController::class, 'emitidos'])->name('emitidos');

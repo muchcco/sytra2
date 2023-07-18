@@ -33,14 +33,53 @@ class ExpPrincipalController extends Controller
 
         $td_tipos = Tdtipos::where('ext', 1)->orderBy('nombre', 'desc')->get();
 
+        // OBETENEMOS EL CODIGO DE OFICINA DEL USUARIO LOGEADO
+
+        $c_oficina = Empleado::join('oficinas', 'oficinas.id', '=', 'empleado.oficinas_id')
+                            ->select('empleado.*', 'oficinas.id as id_oficina', 'oficinas.siglas')
+                            ->where('empleado.id', auth()->user()->empleado_id)
+                            ->first();
+
         $oficinas = DB::table('oficinas as o')
-                        ->select('o.id', DB::raw('CONCAT(l.nombre," - ", o.nombre) as nombre'))
+                        ->select('o.id', DB::raw('CONCAT(l.nombre," - ", o.nombre) as nombre'), 'o.siglas')
                         ->join('lugares as l', 'o.lugares_id', 'l.id')
                         ->where('o.lugares_id', 1)
                         ->orderBy('l.id', 'ASC')
                         ->get();
 
-        return view('modulos.expinterno.td_nuevo', compact('td_tipos', 'oficinas'));
+        return view('modulos.expinterno.td_nuevo', compact('td_tipos', 'oficinas', 'c_oficina'));
+    }
+
+    public function buscar_ndoc(Request $request)
+    {
+        //SE CREA EXPEDIENTE POR AÑO Y MES
+        $año_act = Carbon::now()->format('Y');
+        $mes_act = Carbon::now()->format('m');
+
+        // OBETENEMOS EL CODIGO DE OFICINA DEL USUARIO LOGEADO
+
+        $c_oficina = Empleado::join('oficinas', 'oficinas.id', '=', 'empleado.oficinas_id')
+                            ->select('empleado.*', 'oficinas.id as id_oficina')
+                            ->where('empleado.id', auth()->user()->empleado_id)
+                            ->first();
+
+
+        $entrada = Folioint::select('c_oficina', 'año_exp', 'num_doc')
+                            ->where('año_exp', $año_act)
+                            ->where('td_tipos_id', $request->ndoc)
+                            ->where('c_oficina', $c_oficina->id_oficina)
+                            ->orderBy('num_doc', 'desc')->first();
+        // dd($entrada);
+           
+        if(isset($entrada->num_doc)){                
+            $codentrada = $entrada->num_doc + 1;
+            $codexp = Str::padLeft($codentrada, 4, '0');
+        }else{
+            $codexp = '0001';
+        }  
+
+        // dd($entrada->num_doc);
+        return response()->json($codexp); 
     }
 
     public function xrecibir(Request $request)
@@ -68,6 +107,14 @@ class ExpPrincipalController extends Controller
 
         $td_tipos = Tdtipos::where('ext', 1)->orderBy('nombre', 'desc')->get();
 
+        // OBETENEMOS EL CODIGO DE OFICINA DEL USUARIO LOGEADO
+
+        $c_oficina = Empleado::join('oficinas', 'oficinas.id', '=', 'empleado.oficinas_id')
+                            ->select('empleado.*', 'oficinas.id as id_oficina', 'oficinas.siglas')
+                            ->where('empleado.id', auth()->user()->empleado_id)
+                            ->first();
+
+
         $oficinas = DB::table('oficinas as o')
                         ->select('o.id', DB::raw('CONCAT(l.nombre," - ", o.nombre) as nombre'))
                         ->join('lugares as l', 'o.lugares_id', 'l.id')
@@ -75,7 +122,7 @@ class ExpPrincipalController extends Controller
                         ->orderBy('l.id', 'ASC')
                         ->get();
 
-        return view('modulos.expinterno.edit_emitidos', compact('folios', 'archivos', 'td_tipos', 'oficinas', 'cant_archivos'));
+        return view('modulos.expinterno.edit_emitidos', compact('folios', 'archivos', 'td_tipos', 'oficinas', 'cant_archivos', 'c_oficina'));
     }
 
     public function view_emitidos(Request $request, $id)
