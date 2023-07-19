@@ -111,6 +111,9 @@ Route::group(['middleware' => ['auth']], function () {
             //XRECIBIR
             Route::post('/recibir_exp', [ExpAccionesController::class, 'recibir_exp'])->name('recibir_exp');
 
+            //RECIBIR
+            Route::post('/rec_derivar', [ExpAccionesController::class, 'rec_derivar'])->name('rec_derivar');
+
         });
     });
 });

@@ -59,17 +59,30 @@ class ExpTablesController extends Controller
 
         $id_oficina = Empleado::where('id', $id_empl)->first();
 
-        $query = DB::select("SELECT folioint.id as id_folio, td_tipos.nombre,folioint.exp,folioint.cabecera,folioint.fecha,folioint.firma,folioint.asunto,folioint.obs,folioint.año_exp, folioint.urgente, log_derivar_int.id as derivar_id
-                            ,(SELECT CONCAT(empleado.apellido,', ',empleado.nombre) FROM empleado WHERE empleado.id = folioint.empid LIMIT 1) AS enombre
-                            ,(SELECT CONCAT(lugares.nombre,' | ',oficinas.nombre) FROM oficinas,lugares WHERE oficinas.id=folioint.c_oficina AND oficinas.lugares_id=lugares.id LIMIT 1)AS onombre
-                            FROM folioint 
-                            INNER JOIN td_tipos 
-                                    ON folioint.td_tipos_id = td_tipos.id
-                            INNER JOIN log_derivar_int
-                                    ON log_derivar_int.`folioint_id` = folioint.`id`
-                            WHERE log_derivar_int.d_oficina = '".$id_oficina->oficinas_id."'
-                            AND log_derivar_int.`recibido` = 1
-                            ORDER BY folioint.fecha DESC ");
+        $query = DB::select("SELECT log_derivar_int.*
+                            ,(SELECT CONCAT(empleado.apellido,', ',empleado.nombre) FROM empleado WHERE empleado.id = log_derivar_int.empid LIMIT 1) AS enombre
+                            ,(SELECT CONCAT(lugares.nombre,' | ',oficinas.nombre) FROM oficinas,lugares WHERE oficinas.id=log_derivar_int.d_oficina AND oficinas.lugares_id=lugares.id LIMIT 1)AS onombre
+                            ,(SELECT folioint.firma FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS firma
+                            ,(SELECT folioint.asunto FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS asunto
+                            ,(SELECT folioint.año_exp FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS año_exp
+                            ,(SELECT folioint.obs FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS obser
+                            ,(SELECT folioint.urgente FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS urgente
+                            ,(SELECT folioint.id FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS foid
+                            ,(SELECT folioint.id FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS id_folio
+                            ,(SELECT folioint.cabecera FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS cabecera
+                            ,(SELECT folioint.`exp` FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS `exp`
+                            ,(SELECT folioint.td_tipos_id FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS td_tipos_id
+                            ,(SELECT folioint.file FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS ofile
+                            ,(SELECT folioint.ext FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS oext
+                            ,(SELECT folioint.size FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) AS osize
+                            FROM log_derivar_int
+                            WHERE log_derivar_int.d_oficina= '".$id_oficina->oficinas_id."'
+                            AND log_derivar_int.tipo=1
+                            AND log_derivar_int.atendido IS NULL
+                            AND log_derivar_int.recibido =1
+                            AND (SELECT folioint.id FROM folioint WHERE folioint.id=log_derivar_int.folioint_id LIMIT 1) IS NOT NULL
+                            ORDER BY log_derivar_int.fecha DESC");
+
         //  dd($id_oficina->oficinas_id);
         $view = view('modulos.expinterno.tablas.tb_recibido', compact('query'))->render();
 

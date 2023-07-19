@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\URL;
 use File;
 
 use App\Models\User;
+use App\Models\Estadofolio;
 use App\Models\Lugar;
 use App\Models\Oficina;
 use App\Models\Tdtipos;
@@ -74,6 +75,7 @@ class ExpAccionesController extends Controller
             $save->aid = $request->d_oficina;
             $save->td_tipos_id = $request->td_tipos_id;
             $save->urgente = $request->urgente;
+            $save->idestados = 1;
     
             //guardamos el select multiple
             $save->aid = $request->d_oficina;
@@ -89,7 +91,7 @@ class ExpAccionesController extends Controller
 
             for($i = 0 ; $i < count($arreglo); $i++){
                 $log = new Logderivarint;
-                $log->tipo = 0;
+                $log->tipo = 1;
                 $log->forma = 0;
                 $log->obs = '';
                 $log->user = auth()->user()->id;
@@ -234,8 +236,26 @@ class ExpAccionesController extends Controller
     {
         $recibir_exp = Logderivarint::findOrFail($request->id);
         $recibir_exp->recibido = 1;
+        $recibir_exp->idestados = 2;
         $recibir_exp->save();
 
         return $recibir_exp;
+    }
+
+    public function recibir_exp(Request $request)
+    {
+        $derivar = new Logderivarint;
+        $derivar->tipo = 1;
+        $derivar->provei = $request->proveido;
+        $derivar->forma = $request->forma;
+        $derivar->obs = $request->obs;
+        $derivar->user = auth()->user()->id;
+        $derivar->empid = auth()->user()->empleado_id;
+        $derivar->fecha = Carbon::now();                
+        $derivar->d_oficina = $request->d_oficina;                
+        $derivar->folioint_id = $request->folio_id;
+        $derivar->save();   
+
+        return $derivar;
     }
 }

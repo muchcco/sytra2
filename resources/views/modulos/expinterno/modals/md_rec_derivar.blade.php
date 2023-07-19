@@ -29,7 +29,7 @@
                     <tr>
                         <th>Proveido</th>
                         <td>
-                            <input type="text" class="form-control">
+                            <input type="text" name="proveido" id="proveido"  class="form-control">
                         </td>
                     </tr>
                 @endif

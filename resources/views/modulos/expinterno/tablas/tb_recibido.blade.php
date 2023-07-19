@@ -1,7 +1,7 @@
 @foreach ($query as $i => $q)
     <tr class="<?php if($q->urgente === 1 ){  echo "urgente";  } ?>">
         <td><i class="<?php if($q->urgente === 1 ){  echo "icofont icofont-star text-danger ";  } ?>"></i></td>        
-        <td>{{ $q->nombre }} <br /> {{ $q->exp }} - {{ $q->año_exp }}</td>
+        <td>{{ $q->cabecera }} <br /> {{ $q->exp }} - {{ $q->año_exp }}</td>
         <td>
             {{ $q->cabecera }} <br /> 
             @if(date("d/m/Y", strtotime($q->fecha)) === Carbon\Carbon::now()->format('d/m/Y'))
@@ -22,10 +22,10 @@
             <button type="button" class="btn btn-nocolor bandejTool" data-toggle="modal" data-target="#large-Modal" onclick="btnModalArchivosDerivado('{{ $q->id_folio }}', 'derivar')" data-tippy-content="Ver Archivos adjuntos al expediente cuando fue derivado"><i class="fa fa-cloud-download"></i></button>
         </td>
         <td class="inline">
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->derivar_id }}', '1', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado Simple</button><br />
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->derivar_id }}', '2', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado con Proveido</button><br />
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->derivar_id }}')"><i class="fa fa-floppy-o"></i> Archivado Simple</button><br />
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->derivar_id }}')"><i class="fa fa-floppy-o"></i> Archivado con Proveido</button>
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->id }}', '1', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado Simple</button><br />
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->id }}', '2', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado con Proveido</button><br />
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}')"><i class="fa fa-floppy-o"></i> Archivado Simple</button><br />
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}')"><i class="fa fa-floppy-o"></i> Archivado con Proveido</button>
         </td>
     </tr>
     

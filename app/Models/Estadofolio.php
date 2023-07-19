@@ -5,25 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Empleado extends Model
+class Estadofolio extends Model
 {
     use HasFactory;
 
-    protected $table = 'empleado';
+    protected $table = 'estados_folio';
 
     protected $fillable = [ 
         'id',
-        'nombre',
-        'apellido',
-        'foto',
+        'descripcion',
+        'siglas',
+        'color',
         'email',
-        'fechnac',
-        'oficina_id',
-        'encargado',
-        'sexo',
-        'tit_tipo',
-        'tit_otro',
-        'cargo'
+        'tipo_documental'
     ];
 
     public $timestamps = false;

@@ -141,6 +141,9 @@ var btnDerivado = (id, prov, id_folio) => {
     });
 }
 
+var btnModificarDerivar = (id) =>{
+    
+}
 
 
 
