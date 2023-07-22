@@ -99,7 +99,7 @@ var btnModalArchivosDerivado = (id, tipo_log) => {
     });
 }
 
-var btnRecibir = (id) => {
+var btnRecibir = (id, folio) => {
     console.log(id);
 
     swal.fire({
@@ -115,7 +115,7 @@ var btnRecibir = (id) => {
                 $.ajax({
                     url: "{{ route('modulos.expinterno.recibir_exp') }}",
                     type: 'post',
-                    data: {_token: $('input[name=_token]').val(), id: id},
+                    data: {_token: $('input[name=_token]').val(), id: id, folio: folio},
                     success: function(response){
                         table_emitidos();
                     }

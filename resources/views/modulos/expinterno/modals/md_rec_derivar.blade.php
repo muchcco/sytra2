@@ -10,6 +10,7 @@
             <h5>{{ $query->firma }}</h5>
             {{ $query->obs }}
             <input type="hidden" id="id" value="{{ $query->id_log }}">
+            <input type="hidden" id="folio_id" value="{{ $query->id }}">
             <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
             <table class="tablas">
                 <tr>

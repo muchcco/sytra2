@@ -43,8 +43,18 @@
 
       <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css')}}">
 
+      {{-- preoad button --}}
+      <link rel="stylesheet" href="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')}}">
 
       <style>
+        button:disabled,
+        button[disabled]{
+        border: 1px solid #999999 !important;
+        background-color: #cccccc !important;
+        color: #666666 !important;
+        cursor: no-drop;
+        }
+
         .btn-nocolor{
             background: none;
             border: none;
@@ -231,6 +241,28 @@
 <script src="{{ asset('assets/js/jquery.mousewheel.min.js')}}"></script>
 
 <script src="{{ asset('//cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
+
+<!-- Session timeout js -->
+<script type="text/javascript" src="{{ asset('assets/pages/session-idle-Timeout/session_timeout.js')}}"></script>
+{{-- <script type="text/javascript" src="{{ asset('assets/pages/session-idle-Timeout/session-idle-Timeout-custom.js')}}"></script> --}}
+
+<script>
+$(document).ready(function() {
+
+    // Idle timeout
+    $.sessionTimeout({
+        heading: 'h5',
+        title: 'Notificación de tiempo de espera de sesión',
+        message: 'Su sesión ha caducado.',
+        warnAfter:  7200000, // 120 minutos
+        redirAfter: 7500000,
+        keepAliveUrl: '{{ URL::to('/') }}',
+        redirUrl: '{{ URL::to('/') }}',
+        logoutUrl: '{{ URL::to('/') }}'
+    });
+
+});
+</script>
 
 <!-- Production  Tippy.js -->
 <script src="https://unpkg.com/@popperjs/core@2"></script>

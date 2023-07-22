@@ -142,7 +142,38 @@ var btnDerivado = (id, prov, id_folio) => {
 }
 
 var btnModificarDerivar = (id) =>{
-    
+    console.log(id);
+
+    var formData = new FormData();
+    formData.append("id", $("#id").val());
+    formData.append("forma", $("#forma").val());
+    formData.append("proveido", $("#proveido").val());
+    formData.append("d_oficina", $("#d_oficina").val());
+    formData.append("obs", $("#obs").val());
+    formData.append("folio_id", $("#folio_id").val());
+    formData.append("_token", $("input[name=_token]").val());
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        cache: false,
+        url: "{{ route('modulos.expinterno.rec_derivar') }}",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){
+            console.log(data);
+            table_recibido();
+            $("#modal_der_expediente").modal('hide');
+        },
+        error: function(e){
+            console.log("error");
+        }
+    });
+}
+
+var btnArchivado = (id, prov, id_folio) => {
+    console.log(id);
 }
 
 

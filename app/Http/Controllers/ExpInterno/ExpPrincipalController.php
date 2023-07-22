@@ -97,6 +97,11 @@ class ExpPrincipalController extends Controller
         return view('modulos.expinterno.emitidos');
     }
 
+    public function derivado(Request $request)
+    {
+        return view('modulos.expinterno.derivado');
+    }
+
     public function edit_emitidos(Request $request, $id)
     {
         $folios = Folioint::where('id', $id)->first(); 
@@ -179,7 +184,7 @@ class ExpPrincipalController extends Controller
 
         $view = view('modulos.expinterno.modals.md_edit_derivar', compact('query', 'oficina'))->render();
 
-        return response()->json(['html' => $view]); 
+        return response()->json(['html' => $view]);
     }
 
     public function md_rec_derivar(Request $request)
@@ -187,7 +192,7 @@ class ExpPrincipalController extends Controller
         $folios = Folioint::where('id', $request->id_folio)->first(); 
 
         $query = Logderivarint::join('folioint', 'folioint.id', '=', 'log_derivar_int.folioint_id')
-                                ->select('log_derivar_int.id as id_log', 'log_derivar_int.forma', 'log_derivar_int.d_oficina', 'log_derivar_int.obs as obs_log', 'folioint.firma', 'folioint.obs')
+                                ->select('log_derivar_int.id as id_log', 'log_derivar_int.forma', 'log_derivar_int.d_oficina', 'log_derivar_int.obs as obs_log', 'folioint.firma', 'folioint.obs', 'folioint.id')
                                 ->where('log_derivar_int.id', $request->id)->first();
 
         $oficina = Oficina::join('lugares', 'lugares.id', '=', 'oficinas.lugares_id')

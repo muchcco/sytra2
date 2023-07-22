@@ -65,7 +65,9 @@ Route::group(['middleware' => ['auth']], function () {
 
 
             Route::get('/xrecibir.php', [ExpPrincipalController::class, 'xrecibir'])->name('xrecibir');
-            Route::get('/recibido.php', [ExpPrincipalController::class, 'recibido'])->name('recibido');            
+            Route::get('/recibido.php', [ExpPrincipalController::class, 'recibido'])->name('recibido');
+            Route::get('/archivado.php', [ExpPrincipalController::class, 'archivado'])->name('archivado');
+            Route::get('/derivado.php', [ExpPrincipalController::class, 'derivado'])->name('derivado');       
             
 
             // EMITIDOS
@@ -81,6 +83,9 @@ Route::group(['middleware' => ['auth']], function () {
 
             //RECIBIDO
             Route::get('/tablas/tb_recibido.php', [ExpTablesController::class, 'tb_recibido'])->name('tablas.tb_recibido');
+
+            //DERIVADO
+            Route::get('/tablas/tb_derivado.php', [ExpTablesController::class, 'tb_derivado'])->name('tablas.tb_derivado');
 
             //EMITIDOS
             Route::get('/tablas/tb_emitidos.php', [ExpTablesController::class, 'tb_emitidos'])->name('tablas.tb_emitidos');

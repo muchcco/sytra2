@@ -33,7 +33,7 @@ class ExpAccionesController extends Controller
 {
     public function storenuevo(Request $request)
     {
-        
+        // dd($request->all());
        try{
             //SE CREA EXPEDIENTE POR AÑO Y MES
             $año_act = Carbon::now()->format('Y');
@@ -97,7 +97,8 @@ class ExpAccionesController extends Controller
                 $log->user = auth()->user()->id;
                 $log->empid = auth()->user()->empleado_id;
                 $log->fecha = Carbon::now();                
-                $log->d_oficina = $arreglo[$i];                
+                $log->d_oficina = $arreglo[$i];
+                $log->c_oficina = $c_oficina->id_oficina;                
                 $log->folioint_id = $save->id;
                 $log->save();                
             }
@@ -234,25 +235,50 @@ class ExpAccionesController extends Controller
 
     public function recibir_exp(Request $request)
     {
+        $folioext = Folioint::findOrFail($request->folio);
+        $folioext->idestados = 2;
+        $folioext->save();
+
         $recibir_exp = Logderivarint::findOrFail($request->id);
         $recibir_exp->recibido = 1;
-        $recibir_exp->idestados = 2;
         $recibir_exp->save();
 
         return $recibir_exp;
     }
 
-    public function recibir_exp(Request $request)
+    public function rec_derivar(Request $request)
     {
+
+        if($request->proveido === "undefined" ){
+            $proveido = NULL;
+        }else{
+            $proveido = $request->proveido;
+        }
+
+        // OBETENEMOS EL CODIGO DE OFICINA DEL USUARIO LOGEADO
+
+        $c_oficina = Empleado::join('oficinas', 'oficinas.id', '=', 'empleado.oficinas_id')
+                            ->select('empleado.*', 'oficinas.id as id_oficina')
+                            ->where('empleado.id', auth()->user()->empleado_id)
+                            ->first();
+
+        //ACTUALIZAMOS A ATENDIDO EL ANTERIOR LOG DERIVADO
+
+        $recibir_exp = Logderivarint::findOrFail($request->id);
+        $recibir_exp->atendido = 1;
+        $recibir_exp->save();
+
+        //ALMACENAMOS UN NUEVO LOG
         $derivar = new Logderivarint;
         $derivar->tipo = 1;
-        $derivar->provei = $request->proveido;
+        $derivar->provei = $proveido;
         $derivar->forma = $request->forma;
         $derivar->obs = $request->obs;
         $derivar->user = auth()->user()->id;
         $derivar->empid = auth()->user()->empleado_id;
         $derivar->fecha = Carbon::now();                
-        $derivar->d_oficina = $request->d_oficina;                
+        $derivar->d_oficina = $request->d_oficina;
+        $derivar->c_oficina = $c_oficina->id_oficina;               
         $derivar->folioint_id = $request->folio_id;
         $derivar->save();   
 

@@ -20,6 +20,7 @@
     <!-- animation nifty modal window effects css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/component.css')}}">
     
+    
 @endsection
 
 @section('script')
@@ -57,61 +58,69 @@
 
 
 <script>
-    // function selca2(sdep2){
-    //     var ttec=" <?php echo date("d/m/Y");?>";
-    //     var edest=document.getElementById("cabecera");
-    //     var myselect=document.getElementById("td_tipos_id");
-    //     var imsel=0;
-    //     for (var i=0; i<myselect.options.length; i++){
-    //         if (myselect.options[i].value==sdep2){
-    //             imsel=i;
-    //             break
-    //         }
-    //     }
-    //     var tdec=myselect.options[imsel].text;
-    //     if(tdec=="Otro...") tdec="(Especifique)";
-    //     edest.value=tdec+" "+ttec;
-        
-    //     console.log(myselect);
-    // }
 
-    function num_doc(ndoc){
-        console.log(ndoc);
-        var ttec=" <?php echo date("Y");?>";
-        var siglas = "<?php echo $c_oficina['siglas']?>"
-        var edest=document.getElementById("cabecera");
-        var n_doc = document.getElementById("n_doc");
-        var myselect=document.getElementById("td_tipos_id");
-        var imsel=0;
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "{{ route('modulos.expinterno.buscar_ndoc') }}",
-            data:{"_token": "{{ csrf_token() }}", ndoc : ndoc},
-            success: function(response){
-                console.log(response);                
-                for (var i=0; i<myselect.options.length; i++){
-                    if (myselect.options[i].value==ndoc){
-                        imsel=i;
-                        break
-                    }
+// VALIDAR INPUTS
+
+function ValidarInput() {
+    var e = { flag: true, mensaje: "" }
+
+
+    if ($("#td_tipos_id").val() == "0" || $("#cabecera").val() == "" || $("#asunto").val() == "" ) {
+        e.flag = false;
+        e.mensaje = 'Debe rellenar las opciones marcadas con (*)';
+        return e;
+    }   
+
+    return e;
+}
+
+// FIN VALIDADOR
+
+function num_doc(ndoc){
+    console.log(ndoc);
+    var ttec=" <?php echo date("Y");?>";
+    var siglas = "<?php echo $c_oficina['siglas']?>"
+    var edest=document.getElementById("cabecera");
+    var n_doc = document.getElementById("n_doc");
+    var myselect=document.getElementById("td_tipos_id");
+    var imsel=0;
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "{{ route('modulos.expinterno.buscar_ndoc') }}",
+        data:{"_token": "{{ csrf_token() }}", ndoc : ndoc},
+        success: function(response){
+            console.log(response);                
+            for (var i=0; i<myselect.options.length; i++){
+                if (myselect.options[i].value==ndoc){
+                    imsel=i;
+                    break
                 }
-                var tdec=myselect.options[imsel].text;
-                if(tdec=="Otro...") tdec="(Especifique)";
-                edest.value=tdec+" N° "+response+"-"+ttec+"/"+siglas+"/"+"MDA";
-                n_doc.value = response;
-            },
-            error: function(jqxhr,textStatus,errorThrown){
-                console.log(jqxhr);
-                console.log(textStatus);
-                console.log(errorThrown);
-                //location.reload();
             }
-        });
-    }
+            var tdec=myselect.options[imsel].text;
+            if(tdec=="Otro...") tdec="(Especifique)";
+            edest.value=tdec+" N° "+response+"-"+ttec+"/"+siglas+"/"+"MDA";
+            n_doc.value = response;
+        },
+        error: function(jqxhr,textStatus,errorThrown){
+            console.log(jqxhr);
+            console.log(textStatus);
+            console.log(errorThrown);
+            //location.reload();
+        }
+    });
+}
 
-    function btnGuardar() {
-        
+function btnGuardar() {
+
+    e = ValidarInput();
+    console.log(e);
+
+    if(e.flag){
+
+        document.getElementById("Guardar").innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cargando';
+        document.getElementById("Guardar").disabled = true;
+
         var formData = new FormData();
         // Read selected files
         var files =$('input[type=file]')[0].files;
@@ -147,17 +156,26 @@
             processData: false,
             contentType: false,
             success: function(data){
-               console.log(data);
-               window.location.href = "{{ route('modulos.expinterno.emitidos') }}";
+                console.log(data);
+                window.location.href = "{{ route('modulos.expinterno.emitidos') }}";
 
             },
             error: function(e){
                 console.log("error");
             }
         });
-
-
+    }else{
+        
+         Swal.fire({
+            icon: "warning",
+            text: e.mensaje,
+            confirmButtonText: "Aceptar"
+        })
+        //  $("#nom_ruta").val("");
+        //alert(r.mensaje)
     }
+
+}
     
 </script>
 @endsection
@@ -204,9 +222,10 @@
                                 <form id="td_nuevo"  enctype="multipart/form-data">
                                     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Tipo:</label>
+                                        <label class="col-sm-2 col-form-label">Tipo: <span class="text-danger">(*)</span> </label>
                                         <div class="col-sm-10">
                                             <select name="td_tipos_id" id="td_tipos_id" class="form-control form-control-inverse" onchange="num_doc(this.value);">
+                                                <option selected value="0" disabled>-- Seleccionar un Tipo de Documento --</option>
                                                 @foreach ($td_tipos as $t)
                                                     <option value="{{ $t->id }}">{{ $t->nombre }}</option>
                                                 @endforeach
@@ -215,7 +234,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Cabecera:</label>
+                                        <label class="col-sm-2 col-form-label">Cabecera: <span class="text-danger">(*)</span></label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" id="cabecera" name="cabecera" value="">
                                             <input type="hidden" class="form-control" id="n_doc" name="n_doc" value="">
@@ -223,28 +242,28 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Asunto:</label>
+                                        <label class="col-sm-2 col-form-label">Asunto: <span class="text-danger">(*)</span></label>
                                         <div class="col-sm-10">
                                             <textarea name="asunto" id="asunto" rows="5" cols="5" class="form-control" placeholder="Ingresar un asunto"></textarea>
                                             <span class="messages"></span>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Firma (Nombre):</label>
+                                        <label class="col-sm-2 col-form-label">Firma (Nombre): <span class="text-danger">(*)</span></label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" id="firma" name="firma" value="">
                                             <span class="messages"></span>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">N° de Folios:</label>
+                                        <label class="col-sm-2 col-form-label">N° de Folios: <span class="text-danger">(*)</span></label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" id="nfolios" name="nfolios" value="1" >
                                             <span class="messages"></span>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Oficina de destino:</label>                                        
+                                        <label class="col-sm-2 col-form-label">Oficina de destino: <span class="text-danger">(*)</span></label>                                        
                                         <div class="col-sm-10">
                                             <select class="form-control form-control-inverse" multiple="multiple" name="d_oficina" id="d_oficina"> 
                                                 @foreach ($oficinas as $o)
@@ -280,10 +299,13 @@
                                             <span class="messages"></span>
                                         </div>
                                     </div>
+                                    <div class="cell preloader5"></div>
                                     <div class="form-group row">
                                         <label class="col-sm-2"></label>
                                         <div class="col-sm-10">
-                                            <button type="button" class="btn btn-primary m-b-0" onclick="btnGuardar()">Guardar</button>
+                                            <button type="button" id="Guardar" class="btn btn-primary m-b-0 buttonload" onclick="btnGuardar()">
+                                                 Guardar
+                                            </button>
                                         </div>
                                     </div>
                                 </form>

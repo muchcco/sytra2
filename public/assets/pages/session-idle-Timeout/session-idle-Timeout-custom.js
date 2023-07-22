@@ -9,8 +9,8 @@ $(document).ready(function() {
         warnAfter: 5000,
         redirAfter: 15000,
         keepAliveUrl: '/',
-        redirUrl: 'session-idle-timeout.html',
-        logoutUrl: 'session-idle-timeout.html'
+        redirUrl: '/',
+        logoutUrl: '/'
     });
     
 });

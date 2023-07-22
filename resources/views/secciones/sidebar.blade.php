@@ -44,7 +44,7 @@
                     </li>
                 </ul>
             </li>
-            <li class=" pcoded-hasmenu @if (Request::is('modulos/expinterno*')) active pcoded-trigger @endif "">
+            <li class=" pcoded-hasmenu @if (Request::is('modulos/expinterno*')) active pcoded-trigger @endif ">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                     <span class="pcoded-mtext">Expedientes de Internos</span>
@@ -86,8 +86,8 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expinterno/derivado.php*')) active @endif">
+                        <a href="{{ route('modulos.expinterno.derivado') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Derivados</span>
                             <span class="pcoded-mcaret"></span>
