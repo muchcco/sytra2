@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExternoController;
 use App\Http\Controllers\PagesController;
 
 use App\Http\Controllers\MesaPartes\PrincipalController;
@@ -12,6 +13,8 @@ use App\Http\Controllers\ExpInterno\ExpAccionesController;
 use App\Http\Controllers\ExpInterno\ExpTablesController;
 
 Auth::routes();
+
+Route::get('mesa_partes.php' , [ExternoController::class, 'mesa_partes'])->name('mesa_partes');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/' , [PagesController::class, 'index'])->name('inicio');
@@ -63,11 +66,11 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/td_nuevo.php', [ExpPrincipalController::class, 'td_nuevo'])->name('td_nuevo');
             Route::post('/buscar_ndoc.php', [ExpPrincipalController::class, 'buscar_ndoc'])->name('buscar_ndoc');
 
-
             Route::get('/xrecibir.php', [ExpPrincipalController::class, 'xrecibir'])->name('xrecibir');
             Route::get('/recibido.php', [ExpPrincipalController::class, 'recibido'])->name('recibido');
             Route::get('/archivado.php', [ExpPrincipalController::class, 'archivado'])->name('archivado');
-            Route::get('/derivado.php', [ExpPrincipalController::class, 'derivado'])->name('derivado');       
+            Route::get('/derivado.php', [ExpPrincipalController::class, 'derivado'])->name('derivado');
+            Route::get('/resumen.php', [ExpPrincipalController::class, 'resumen'])->name('resumen');
             
 
             // EMITIDOS
@@ -78,14 +81,18 @@ Route::group(['middleware' => ['auth']], function () {
             /*=================== TABLAS ================== */
 
             //XRECIBIR
-            Route::get('/tablas/tb_xrecibir.php', [ExpTablesController::class, 'tb_xrecibir'])->name('tablas.tb_xrecibir');
-            Route::post('/tablas/tb_derivar.php', [ExpTablesController::class, 'tb_derivar'])->name('tablas.tb_derivar');
+            Route::get('/tablas/tb_xrecibir.php', [ExpTablesController::class, 'tb_xrecibir'])->name('tablas.tb_xrecibir');            
 
             //RECIBIDO
             Route::get('/tablas/tb_recibido.php', [ExpTablesController::class, 'tb_recibido'])->name('tablas.tb_recibido');
+            Route::post('/tablas/tb_derivar.php', [ExpTablesController::class, 'tb_derivar'])->name('tablas.tb_derivar');  /// VER ARCHIVOS CARGADOS EN EL MODAL
+            Route::post('/tablas/tb_archivar.php', [ExpTablesController::class, 'tb_archivar'])->name('tablas.tb_archivar'); /// VER ARCHIVOS CARGADOS EN EL MODAL
 
             //DERIVADO
             Route::get('/tablas/tb_derivado.php', [ExpTablesController::class, 'tb_derivado'])->name('tablas.tb_derivado');
+
+            //ARCHIVADO
+            Route::get('/tablas/tb_archivado.php', [ExpTablesController::class, 'tb_archivado'])->name('tablas.tb_archivado');
 
             //EMITIDOS
             Route::get('/tablas/tb_emitidos.php', [ExpTablesController::class, 'tb_emitidos'])->name('tablas.tb_emitidos');
@@ -101,6 +108,7 @@ Route::group(['middleware' => ['auth']], function () {
 
             //RECIBIDO
             Route::post('/modals/md_rec_derivar', [ExpPrincipalController::class, 'md_rec_derivar'])->name('modals.md_rec_derivar');
+            Route::post('/modals/md_rec_archivar', [ExpPrincipalController::class, 'md_rec_archivar'])->name('modals.md_rec_archivar');
 
             /*=================== METODOS GUARDAR ACTUALIZAR ELIMINAR ================== */
             
@@ -118,6 +126,9 @@ Route::group(['middleware' => ['auth']], function () {
 
             //RECIBIR
             Route::post('/rec_derivar', [ExpAccionesController::class, 'rec_derivar'])->name('rec_derivar');
+            Route::post('/rec_archivar', [ExpAccionesController::class, 'rec_archivar'])->name('rec_archivar');
+
+            
 
         });
     });

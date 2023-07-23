@@ -24,8 +24,8 @@
         <td class="inline">
             <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->id }}', '1', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado Simple</button><br />
             <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->id }}', '2', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado con Proveido</button><br />
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}')"><i class="fa fa-floppy-o"></i> Archivado Simple</button><br />
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}')"><i class="fa fa-floppy-o"></i> Archivado con Proveido</button>
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}', '1', '{{ $q->id_folio }}')"><i class="fa fa-floppy-o"></i> Archivado Simple</button><br />
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}', '2', '{{ $q->id_folio }}')"><i class="fa fa-floppy-o"></i> Archivado con Proveido</button>
         </td>
     </tr>
     

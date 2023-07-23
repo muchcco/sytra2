@@ -27,7 +27,7 @@ use App\Models\Empleado;
 use App\Models\Folioint;
 use App\Models\Archivoint;
 use App\Models\Logderivarint;
-use App\Models\Logarchivados;
+use App\Models\Logarchivadoint;
 
 class ExpAccionesController extends Controller
 {
@@ -161,6 +161,7 @@ class ExpAccionesController extends Controller
 
                 $archivos->nombre_archivo = $archivoName;
             }
+            $archivos->ubicacion = $estructura_carp;
             $archivos->save();
 
             return $archivos;
@@ -283,5 +284,50 @@ class ExpAccionesController extends Controller
         $derivar->save();   
 
         return $derivar;
+    }
+
+    public function rec_archivar(Request $request)
+    {
+        try{
+            // dd($request->all());
+            if($request->proveido === "undefined" ){
+                $proveido = NULL;
+            }else{
+                $proveido = $request->proveido;
+            }
+
+            // OBETENEMOS EL CODIGO DE OFICINA DEL USUARIO LOGEADO
+
+            $c_oficina = Empleado::join('oficinas', 'oficinas.id', '=', 'empleado.oficinas_id')
+                                ->select('empleado.*', 'oficinas.id as id_oficina')
+                                ->where('empleado.id', auth()->user()->empleado_id)
+                                ->first();
+
+            //ACTUALIZAMOS EL ESTADO DEL FOLIO
+
+            //ACTUALIZAMOS A ATENDIDO EL ANTERIOR LOG DERIVADO
+
+            $update_derivar = Logderivarint::findOrFail($request->id);
+            $update_derivar->atendido = 1;
+            $update_derivar->save();
+            
+            //ALMACENAMOS UN NUEVO LOG
+            $archivar = new Logarchivadoint;
+            $archivar->tipo = 1;
+            $archivar->provei = $proveido;
+            $archivar->forma = $request->forma;
+            $archivar->obs = $request->obs;
+            $archivar->user = auth()->user()->id;
+            $archivar->empid = auth()->user()->empleado_id;
+            $archivar->fecha = Carbon::now();
+            $archivar->c_oficina = $c_oficina->id_oficina;               
+            $archivar->folioint_id = $request->folio_id;
+            $archivar->save();
+
+            return $archivar;
+        }catch(Exception $e){
+            //Si existe algún error en la Transacción
+            DB::rollback(); //Anular los cambios en la DB
+        }
     }
 }

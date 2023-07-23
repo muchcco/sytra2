@@ -230,4 +230,50 @@ class ExpTablesController extends Controller
         return response()->json(['html' => $view]);
     }
 
+    public function tb_archivar(Request $request)
+    {
+        $archivos = Archivoint::join('folioint', 'folioint.id', '=', 'archivos_foliosint.folioint_id')
+                                ->select('*', 'archivos_foliosint.id as id_archivo')
+                                ->where('archivos_foliosint.folioint_id', $request->id)
+                                ->where('tipo_log', 'archivar')
+                                ->get();
+
+        return $archivos;
+    }
+
+    public function tb_archivado(Request $request)
+    {
+        $id_empl = auth()->user()->empleado_id;
+
+        $id_oficina = Empleado::where('id', $id_empl)->first();
+
+        $query = DB::select("SELECT log_archivo_int.*
+                            ,(SELECT CONCAT(empleado.apellido,', ',empleado.nombre) FROM empleado WHERE empleado.id = log_archivo_int.empid LIMIT 1) AS enombre
+                            ,(SELECT CONCAT(lugares.nombre,' | ',oficinas.nombre) FROM oficinas,lugares WHERE oficinas.id=log_archivo_int.d_oficina AND oficinas.lugares_id=lugares.id LIMIT 1)AS onombre
+                            ,(SELECT folioint.firma FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS firma
+                            ,(SELECT folioint.asunto FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS asunto
+                            ,(SELECT folioint.año_exp FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS año_exp
+                            ,(SELECT folioint.obs FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS obser
+                            ,(SELECT folioint.urgente FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS urgente
+                            ,(SELECT folioint.id FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS foid
+                            ,(SELECT folioint.id FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS id_folio
+                            ,(SELECT folioint.cabecera FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS cabecera
+                            ,(SELECT folioint.`exp` FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS `exp`
+                            ,(SELECT folioint.td_tipos_id FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS td_tipos_id
+                            ,(SELECT folioint.file FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS ofile
+                            ,(SELECT folioint.ext FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS oext
+                            ,(SELECT folioint.size FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS osize
+                            ,(SELECT folioint.nfolios FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) AS nfolios
+                            FROM log_archivo_int
+                            WHERE log_archivo_int.c_oficina= '".$id_oficina->oficinas_id."'
+                            AND (SELECT folioint.id FROM folioint WHERE folioint.id=log_archivo_int.folioint_id LIMIT 1) IS NOT NULL
+                            AND log_archivo_int.tipo=1
+                            ORDER BY log_archivo_int.fecha DESC");
+
+        //  dd($id_oficina->oficinas_id);
+        $view = view('modulos.expinterno.tablas.tb_archivado', compact('query'))->render();
+
+        return response()->json(['html' => $view]);
+    }
+
 }

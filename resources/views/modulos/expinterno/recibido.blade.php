@@ -173,9 +173,52 @@ var btnModificarDerivar = (id) =>{
 }
 
 var btnArchivado = (id, prov, id_folio) => {
-    console.log(id);
+    console.log(id_folio);
+    
+    $.ajax({
+        type:'post',
+        url: "{{ route('modulos.expinterno.modals.md_rec_archivar') }}",
+        dataType: "json",
+        data:{"_token": "{{ csrf_token() }}", id : id, prov: prov, id_folio:id_folio},
+        success:function(data){
+            $("#modal_arch_expediente").html(data.html);
+            $("#modal_arch_expediente").modal('show');
+        }
+    });
 }
 
+var btnModificarArchivar = (id) => {
+    console.log(id);
+
+    document.getElementById("btn_archivar").innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cargando ...';
+    document.getElementById("btn_archivar").disabled = true;
+
+    var formData = new FormData();
+    formData.append("forma", $("#forma").val());
+    formData.append("proveido", $("#proveido").val());
+    formData.append("obs", $("#obs").val());
+    formData.append("folio_id", $("#folio_id").val());
+    formData.append("id", $("#id").val());
+    formData.append("_token", $("input[name=_token]").val());
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        cache: false,
+        url: "{{ route('modulos.expinterno.rec_archivar') }}",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){
+            console.log(data);
+            table_recibido();
+            $("#modal_arch_expediente").modal('hide');
+        },
+        error: function(e){
+            console.log("error");
+        }
+    });
+}
 
 
 </script>
@@ -296,4 +339,6 @@ var btnArchivado = (id, prov, id_folio) => {
 <div class="modal fade" id="modal_ver_archivo" tabindex="-1" role="dialog" ></div>
 {{-- Derivar Exp --}}
 <div class="modal fade" id="modal_der_expediente" tabindex="-1" role="dialog" ></div>
+{{-- Archivar Exp --}}
+<div class="modal fade" id="modal_arch_expediente" tabindex="-1" role="dialog" ></div>
 @endsection

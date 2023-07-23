@@ -47,7 +47,7 @@
             <li class=" pcoded-hasmenu @if (Request::is('modulos/expinterno*')) active pcoded-trigger @endif ">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
-                    <span class="pcoded-mtext">Expedientes de Internos</span>
+                    <span class="pcoded-mtext">Expedientes Internos</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
@@ -79,8 +79,8 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expinterno/archivado.php*')) active @endif">
+                        <a href="{{ route('modulos.expinterno.archivado') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Archivados</span>
                             <span class="pcoded-mcaret"></span>
@@ -93,8 +93,8 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expinterno/resumen.php*')) active @endif">
+                        <a href="{{ route('modulos.expinterno.resumen') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Resumen</span>
                             <span class="pcoded-mcaret"></span>
@@ -105,7 +105,7 @@
             <li class=" pcoded-hasmenu">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
-                    <span class="pcoded-mtext">Expedientes de Externos</span>
+                    <span class="pcoded-mtext">Expedientes Externos</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">

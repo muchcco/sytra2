@@ -379,7 +379,13 @@ var btnModificarDerivar = (id) => {
                                                                 <td>{{ date("d/m/Y H:i:s", strtotime($log_arc->fecha)) }}</td>
                                                                 <td>{{ $log_arc->nombre }}</td>
                                                                 <td>{{ $log_arc->obs }}</td>
-                                                                <td>{{ $log_arc->forma }}</td>
+                                                                <td>
+                                                                    @if ($log_arc->forma === 0)
+                                                                        Original
+                                                                    @elseif($log_arc->forma === 1)
+                                                                        Copia
+                                                                    @endif
+                                                                </td>
                                                                 <td>{{ $log_arc->provei }}</td>
                                                                 <td></td>
                                                             </tr>
@@ -413,7 +419,6 @@ var btnModificarDerivar = (id) => {
                                             <li><a href=""><i class="icofont icofont-refresh text-success" ></i> Refrescar página</a></li>
                                             <li><a href="{{ route('modulos.expinterno.edit_emitidos', $query->id_folio) }}"><i class="icofont icofont-edit text-default" ></i> Modificar folio</a></li>
                                             <li><a href=""><i class="icofont icofont-close-circled text-danger"></i> Eliminar folio.</a></li>
-                                            <li><a href=""><i class="icofont icofont-print text-primary" ></i> Cargo</a></li>
                                             <li><a href=""><i class="icofont icofont-print text-primary" ></i> Imprimir</a></li>
                                         </ul>
                                     </div>

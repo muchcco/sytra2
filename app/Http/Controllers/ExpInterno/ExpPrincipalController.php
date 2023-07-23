@@ -102,6 +102,22 @@ class ExpPrincipalController extends Controller
         return view('modulos.expinterno.derivado');
     }
 
+    public function archivado(Request $request)
+    {
+        return view('modulos.expinterno.archivado');
+    }
+
+    public function resumen(Request $request)
+    {
+        $id_empl = auth()->user()->empleado_id;
+
+        $id_oficina = Empleado::where('id', $id_empl)->first();
+
+        $query = DB::select("CALL SP_resumen_interno_tabla('".$id_oficina->oficinas_id."')");
+
+        return view('modulos.expinterno.resumen', compact('query'));
+    }
+
     public function edit_emitidos(Request $request, $id)
     {
         $folios = Folioint::where('id', $id)->first(); 
@@ -208,6 +224,26 @@ class ExpPrincipalController extends Controller
         // dd($cant_archivos);
 
         $view = view('modulos.expinterno.modals.md_rec_derivar', compact( 'folios', 'query', 'oficina', 'proveido', 'cant_archivos'))->render();
+
+        return response()->json(['html' => $view]);
+    }
+
+    public function md_rec_archivar(Request $request)
+    {
+        $folios = Folioint::where('id', $request->id_folio)->first(); 
+        // dd($request->id_folio);
+
+        $proveido = $request->prov;
+
+        $archivos = Archivoint::where('folioint_id', $request->id_folio)->where('tipo_log', 'derivar')->get();
+
+        $query = Logderivarint::join('folioint', 'folioint.id', '=', 'log_derivar_int.folioint_id')
+                                ->select('log_derivar_int.id as id_log', 'log_derivar_int.forma', 'log_derivar_int.d_oficina', 'log_derivar_int.obs as obs_log', 'folioint.firma', 'folioint.obs', 'folioint.id')
+                                ->where('log_derivar_int.id', $request->id)->first();
+
+        $cant_archivos = count($archivos);
+
+        $view = view('modulos.expinterno.modals.md_rec_archivar', compact( 'folios', 'query' ,'proveido', 'cant_archivos'))->render();
 
         return response()->json(['html' => $view]);
     }
