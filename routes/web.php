@@ -15,6 +15,7 @@ use App\Http\Controllers\ExpInterno\ExpTablesController;
 Auth::routes();
 
 Route::get('mesa_partes.php' , [ExternoController::class, 'mesa_partes'])->name('mesa_partes');
+Route::post('store' , [ExternoController::class, 'store'])->name('store');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/' , [PagesController::class, 'index'])->name('inicio');

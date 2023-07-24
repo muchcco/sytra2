@@ -30,7 +30,6 @@ h2{
 
 #main{
     width: 100%;
-    border: 1px solid black;
 }
 
 .carp{
@@ -47,4 +46,13 @@ h2{
 .buut{
     margin-left: .2em;
     margin-right: .2em;
+}
+
+.btn_enviar{
+    display: flex !important;
+    justify-content: center !important; 
+}
+
+.hasError{
+    border: 1px solid #f00 !important;
 }

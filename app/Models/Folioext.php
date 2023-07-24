@@ -15,12 +15,12 @@ class Folioext extends Model
                             'id',
                             'exp', 
                             'año_exo',
-                            'mes_exo', 
+                            'mes_exo',
                             'asunto',
                             'firma', 
                             'nfolio', 
                             'fecha', 
-                            'user', 
+                            'user',
                             'empid', 
                             'c_oficina', 
                             'obs', 
@@ -36,7 +36,16 @@ class Folioext extends Model
                             'urgente', 
                             'telefono', 
                             'correo', 
-                            'direccion' 
+                            'direccion',
+                            'idestados',
+                            't_persona',
+                            'ruc',
+                            'r_social',
+                            't_documento',
+                            'n_documento',
+                            'ap_paterno',
+                            'ap_materno',
+                            'nombre'
                         ];
 
     public $timestamps = false;
