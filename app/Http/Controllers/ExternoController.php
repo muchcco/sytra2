@@ -51,7 +51,7 @@ class ExternoController extends Controller
                 'n_doc_envio' => 'required',
                 'n_folio_envio' => 'required',
                 'asunto_envio' => 'required',
-            ]);
+            ]);            
             
             //SE CREA EXPEDIENTE POR AÑO Y MES
             // dd($request->all());
@@ -69,6 +69,19 @@ class ExternoController extends Controller
             }else{
                 $codexp = '00000001';
             }
+
+            // OBTENEMOS LA CABECERA DEL DOCUMENTO
+
+            $tipo_documento = Tdtipos::where('id', $request->t_doc_envio)->first();
+
+            $name = '';
+            $explode = explode(' ', $nombre);
+            foreach($explode as $x){
+                $name .=  $x[0];
+            }
+
+            $cabecera = $tipo_documento->nombre. 'NRO.'. $request->n_doc_envio.'-'.$año_act.'-'.$name;
+
 
             $save = new Folioext;
             $save->exp =  $codexp;
@@ -89,7 +102,7 @@ class ExternoController extends Controller
             $save->direccion = $request->direccion;
             
             $save->td_tipos_id = $request->t_doc_envio;
-            $save->cabecera = $request->n_doc_envio;
+            $save->cabecera = $cabecera;
             $save->nfolios = $request->n_folio_envio;
             $save->asunto = $request->asunto_envio;
 

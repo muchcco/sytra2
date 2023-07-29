@@ -44,7 +44,7 @@ var tabla = $("#table_derivado").DataTable();
 var table_derivado = () => {
     $.ajax({
         type: 'GET',
-        url: "{{ route('modulos.expinterno.tablas.tb_derivado') }}" ,
+        url: "{{ route('modulos.expinterno.tablas.tb_archivado') }}" ,
         dataType: "json",
         success: function(data){
             tabla.destroy();

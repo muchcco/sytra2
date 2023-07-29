@@ -102,15 +102,15 @@
                     </li>
                 </ul>
             </li>
-            <li class=" pcoded-hasmenu">
+            <li class=" pcoded-hasmenu @if (Request::is('modulos/expexterno*')) active pcoded-trigger @endif ">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                     <span class="pcoded-mtext">Expedientes Externos</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expexterno/xrecibir.php*')) active @endif">
+                        <a href="{{ route('modulos.expexterno.xrecibir') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.header-fixed">Por recibir</span>
                             <span class="pcoded-mcaret"></span>

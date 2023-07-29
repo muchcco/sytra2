@@ -12,6 +12,10 @@ use App\Http\Controllers\ExpInterno\ExpPrincipalController;
 use App\Http\Controllers\ExpInterno\ExpAccionesController;
 use App\Http\Controllers\ExpInterno\ExpTablesController;
 
+use App\Http\Controllers\ExpExterno\BandejaController;
+use App\Http\Controllers\ExpExterno\BandejaTablaController;
+
+
 Auth::routes();
 
 Route::get('mesa_partes.php' , [ExternoController::class, 'mesa_partes'])->name('mesa_partes');
@@ -129,7 +133,18 @@ Route::group(['middleware' => ['auth']], function () {
             Route::post('/rec_derivar', [ExpAccionesController::class, 'rec_derivar'])->name('rec_derivar');
             Route::post('/rec_archivar', [ExpAccionesController::class, 'rec_archivar'])->name('rec_archivar');
 
-            
+        });
+
+        /************************************************* EXPEDIENTES EXTERNOS  ******************************************************* */
+
+        Route::group(['prefix'=>'expexterno','as'=>'expexterno.' ],function () {
+
+            Route::get('/xrecibir.php', [BandejaController::class, 'xrecibir'])->name('xrecibir');
+
+            /*=================== TABLAS ================== */
+            //XRECIBIR
+            Route::get('/tablas/tb_xrecibir.php', [BandejaTablaController::class, 'tb_xrecibir'])->name('tablas.tb_xrecibir'); 
+
 
         });
     });
