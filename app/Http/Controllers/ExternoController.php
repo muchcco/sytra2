@@ -17,6 +17,7 @@ use DatePeriod;
 use DateInterval;
 use Illuminate\Support\Facades\URL;
 use File;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Models\User;
 use App\Models\Lugar;

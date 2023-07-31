@@ -229,7 +229,7 @@
                 <div class="form-p btn_enviar">
                   <div class="row col-sm-2 buut">
                     <div class="">
-                      <button type="button" class="form-control btn btn-danger" id="btnEnviarForm" onclick="btnEnviar()">ENVIAR</button>
+                      <button type="button" class="form-control btn btn-danger" id="btnEnviarForm" data-toggle="modal" data-target="#large-Modal"onclick="btnEnviar()">ENVIAR</button>
                     </div>
                   </div>
                 </div>
@@ -262,6 +262,9 @@
     </section>
 
 </article>
+<div id="error"></div>
+
+@include('modal_err')
 
 {{-- <script src="{{ asset('js/ext.js') }}"></script> --}}
 <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -440,7 +443,7 @@ var btnEnviar = () =>{
             document.getElementById("btnEnviarForm").disabled = true;
         },
         success: function(result){
-          if(result.Success){
+          if(result.success){
 
           }else{
             console.log(result);
@@ -450,10 +453,11 @@ var btnEnviar = () =>{
             console.log(jqxhr.responseJSON.error);
             console.log(textStatus);
             console.log(errorThrown);
-            MostrarMensaje(titulo, jqxhr.responseJSON.error, "error");
-
+            MostrarMensaje(titulo, jqxhr.responseJSON.error, "error");           
+            
             document.getElementById("btnEnviarForm").innerHTML = 'ENVIAR';
             document.getElementById("btnEnviarForm").disabled = false;
+            $("#errrroorr").modal('hide');
         }
     });
 }
