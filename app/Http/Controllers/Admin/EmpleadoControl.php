@@ -148,7 +148,7 @@ class EmpleadoControl extends Controller
         $user->usuario = $empleado->dni;
         $user->empleado_id = $empleado->id;
         $user->level = $request->level;
-        $user->email = $email;
+        $user->email = $empleado->dni;
         $user->password = Hash::make($request->password);
         $user->save();
 

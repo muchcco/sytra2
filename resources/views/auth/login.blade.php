@@ -134,7 +134,7 @@
                                 </div>
                                 <hr>
                                 <div class="input-group">
-                                    <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="Usuario">
+                                    <input type="text" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="Usuario">
                                     <span class="md-line">
                                         
                                    </span>
