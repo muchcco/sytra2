@@ -14,7 +14,7 @@
             <a href="{{ route('modulos.expexterno.ver_folio', $q->id_folio) }}" class="bandejTool btn-cursor"  data-tippy-content="Ver Expediente" >
                 {{ $q->firma }} <br /> {{ $q->asunto }} <br /> {{ $q->obs }} 
             </a>  
-        </td>     
+        </td>        
         <td>
             <button type="button" class="btn btn-nocolor bandejTool" data-toggle="modal" data-target="#large-Modal" onclick="btnModalArchivos('{{ $q->id_folio }}', 'folioext')" data-tippy-content="Ver Archivos adjuntos al expediente"><i class="fa fa-cloud-download"></i></button>
         </td>
@@ -22,7 +22,10 @@
             <button type="button" class="btn btn-nocolor bandejTool" data-toggle="modal" data-target="#large-Modal" onclick="btnModalArchivosDerivado('{{ $q->id_folio }}', 'derivar')" data-tippy-content="Ver Archivos adjuntos al expediente cuando fue derivado"><i class="fa fa-cloud-download"></i></button>
         </td>
         <td class="inline">
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnRecibir('{{ $q->derivar_id }}', '{{ $q->id_folio }}')"><i class="fa fa-check"></i> Recibir</button>
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->id }}', '1', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado Simple</button><br />
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnDerivado('{{ $q->id }}', '2', '{{ $q->id_folio }}')"><i class="fa fa-files-o"></i> Derivado con Proveido</button><br />
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}', '1', '{{ $q->id_folio }}')"><i class="fa fa-floppy-o"></i> Archivado Simple</button><br />
+            <button type="buttom" class="btn btn-sm nobtn" onclick="btnArchivado('{{ $q->id }}', '2', '{{ $q->id_folio }}')"><i class="fa fa-floppy-o"></i> Archivado con Proveido</button>
         </td>
     </tr>
     

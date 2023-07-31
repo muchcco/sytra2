@@ -53,6 +53,10 @@
         cursor: no-drop;
         }
 
+        .cursor-pointer{
+            cursor: pointer;
+        }
+
         .btn-nocolor{
             background: none;
             border: none;

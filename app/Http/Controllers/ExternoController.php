@@ -113,7 +113,7 @@ class ExternoController extends Controller
             $save->save();
 
             $log = new Logderivarext;
-            $log->tipo = 0;
+            $log->tipo = 1;
             $log->forma = 0;
             $log->obs = '';
             $log->fecha = Carbon::now();                

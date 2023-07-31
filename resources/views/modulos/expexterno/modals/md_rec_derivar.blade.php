@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title"> Modificar log de expediente</h4>
+            <h4 class="modal-title"> Modificar log de expediente - Derivar</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -129,7 +129,7 @@ ko.applyBindings(vForm);
 
 var carga = () => {
     var id = "<?php echo $folios['id']?>";
-    $.post("{{ route('modulos.expinterno.tablas.tb_derivar') }}",
+    $.post("{{ route('modulos.expexterno.tablas.tb_derivar') }}",
             {
                 _token: "{{ csrf_token() }}",
                 id: id
@@ -202,12 +202,13 @@ var btnFile = (id) => {
         formData.append("id", id);
         formData.append("tipo_log", "derivar");
         formData.append("_token", $("input[name=_token]").val());
+        console.log(formData);
 
         $.ajax({
             type: "POST",
             dataType: "json",
             cache: false,
-            url: "{{ route('modulos.expinterno.storearchivos') }}",
+            url: "{{ route('modulos.expexterno.storearchivos') }}",
             data: formData,
             processData: false,
             contentType: false,
@@ -236,7 +237,7 @@ var Ver_Archivo =  (item) =>{
 
     var link = '{{ URL::to('/') }}';
 
-    var ruta = '/archivos/folioint/'+item.año_exp+'/'+item.exp+'/'+item.nombre_archivo;
+    var ruta = '/archivos/folioext/'+item.año_exp+'/'+item.exp+'/'+item.nombre_archivo;
 
     var href =  link+ruta;
 
@@ -254,7 +255,7 @@ var Eliminar_Archivo =  (item) =>{
     $.ajax({
         type: "POST",
         dataType: "json",        
-        url: "{{ route('modulos.expinterno.eliminar_archivos') }}",
+        url: "{{ route('modulos.expexterno.eliminar_archivos') }}",
         data: { "_token": "{{ csrf_token() }}", id : id },
         success: function(data){
             console.log(data);

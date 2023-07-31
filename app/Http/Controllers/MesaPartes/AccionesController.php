@@ -82,6 +82,7 @@ class AccionesController extends Controller
             $save->aid = $request->d_oficina;
             $save->td_tipos_id = $request->td_tipos_id;
             $save->urgente = $request->urgente;
+            $save->idestadops = 1;
     
             //guardamos el select multiple
             $save->aid = $request->d_oficina;
@@ -97,7 +98,7 @@ class AccionesController extends Controller
 
             for($i = 0 ; $i < count($arreglo); $i++){
                 $log = new Logderivarext;
-                $log->tipo = 0;
+                $log->tipo = 1;
                 $log->forma = 0;
                 $log->obs = '';
                 $log->user = auth()->user()->id;

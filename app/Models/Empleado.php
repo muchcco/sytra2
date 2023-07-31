@@ -16,6 +16,7 @@ class Empleado extends Model
         'nombre',
         'apellido',
         'foto',
+        'dni',
         'email',
         'fechnac',
         'oficina_id',

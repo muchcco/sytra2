@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExternoController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\AdministrarController;
 
 use App\Http\Controllers\MesaPartes\PrincipalController;
 use App\Http\Controllers\MesaPartes\TablesController;
@@ -14,6 +15,9 @@ use App\Http\Controllers\ExpInterno\ExpTablesController;
 
 use App\Http\Controllers\ExpExterno\BandejaController;
 use App\Http\Controllers\ExpExterno\BandejaTablaController;
+use App\Http\Controllers\ExpExterno\BandejaAccionesController;
+
+use App\Http\Controllers\Admin\EmpleadoControl;
 
 
 Auth::routes();
@@ -140,12 +144,90 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['prefix'=>'expexterno','as'=>'expexterno.' ],function () {
 
             Route::get('/xrecibir.php', [BandejaController::class, 'xrecibir'])->name('xrecibir');
+            Route::get('/recibido.php', [BandejaController::class, 'recibido'])->name('recibido');
+            Route::get('/derivado.php', [BandejaController::class, 'derivado'])->name('derivado');
+            Route::get('/archivado.php', [BandejaController::class, 'archivado'])->name('archivado');
+            Route::get('/ver_folio.php/{id}', [BandejaController::class, 'ver_folio'])->name('ver_folio');
 
             /*=================== TABLAS ================== */
+            
+            Route::get('/tablas/tb_ver_derivar.php', [BandejaTablaController::class, 'tb_ver_derivar'])->name('tablas.tb_ver_derivar'); 
             //XRECIBIR
             Route::get('/tablas/tb_xrecibir.php', [BandejaTablaController::class, 'tb_xrecibir'])->name('tablas.tb_xrecibir'); 
+            //RECIBIDO
+            Route::get('/tablas/tb_recibido.php', [BandejaTablaController::class, 'tb_recibido'])->name('tablas.tb_recibido');
+            Route::post('/tablas/tb_derivar.php', [BandejaTablaController::class, 'tb_derivar'])->name('tablas.tb_derivar');  /// VER ARCHIVOS CARGADOS EN EL MODAL
+            Route::post('/tablas/tb_archivar.php', [BandejaTablaController::class, 'tb_archivar'])->name('tablas.tb_archivar'); /// VER ARCHIVOS CARGADOS EN EL MODAL
 
+            //DERIVADO
+            Route::get('/tablas/tb_derivado.php', [BandejaTablaController::class, 'tb_derivado'])->name('tablas.tb_derivado');            
+
+            //ARCHIVADO
+            Route::get('/tablas/tb_archivado.php', [BandejaTablaController::class, 'tb_archivado'])->name('tablas.tb_archivado');
+
+            /*=================== MODALES ================== */
+            // XRECIBIR
+            Route::post('/modals/md_archivo', [BandejaController::class, 'md_archivo'])->name('modals.md_archivo'); 
+            Route::post('/modals/md_edit_derivar', [BandejaController::class, 'md_edit_derivar'])->name('modals.md_edit_derivar');
+
+            //RECIBIDO
+            Route::post('/modals/md_rec_derivar', [BandejaController::class, 'md_rec_derivar'])->name('modals.md_rec_derivar');
+            Route::post('/modals/md_rec_archivar', [BandejaController::class, 'md_rec_archivar'])->name('modals.md_rec_archivar');
+
+            /*=================== METODOS GUARDAR ACTUALIZAR ELIMINAR ================== */  
+            
+            Route::post('/storearchivos', [BandejaAccionesController::class, 'storearchivos'])->name('storearchivos');
+            Route::post('/eliminar_archivos', [BandejaAccionesController::class, 'eliminar_archivos'])->name('eliminar_archivos');
+            //X RECIBIR
+            Route::post('/recibir_exp', [BandejaAccionesController::class, 'recibir_exp'])->name('recibir_exp');
+
+            //RECIBIDO
+            Route::post('/rec_derivar', [BandejaAccionesController::class, 'rec_derivar'])->name('rec_derivar');
+            Route::post('/rec_archivar', [BandejaAccionesController::class, 'rec_archivar'])->name('rec_archivar');
+            
+            //VER FOLIO
+            Route::post('/deletederivado', [BandejaAccionesController::class, 'deletederivado'])->name('deletederivado');
+            Route::post('/edit_logderivar', [BandejaAccionesController::class, 'edit_logderivar'])->name('edit_logderivar');
 
         });
+
+        /************************************************* EXPEDIENTES EXTERNOS  ******************************************************* */
+
+        Route::group(['prefix'=>'administrador','as'=>'administrador.' ],function () {
+
+            /***  EXP INTERNOS  ***/
+
+            Route::get('/interno.php', [AdministrarController::class, 'interno'])->name('interno');
+            Route::get('/tablas/tb_interno.php', [AdministrarController::class, 'tb_interno'])->name('tablas.tb_interno');
+            Route::get('/ver_interno.php/{id}', [AdministrarController::class, 'ver_interno'])->name('ver_interno');
+            Route::get('/edit_interno.php/{id}', [AdministrarController::class, 'edit_interno'])->name('edit_interno');
+
+            /***  EXP EXTERNOS  ***/
+
+            Route::get('/externo.php', [AdministrarController::class, 'externo'])->name('externo');
+            Route::get('/tablas/tb_externo.php', [AdministrarController::class, 'tb_externo'])->name('tablas.tb_externo');
+            Route::get('/ver_externo.php/{id}', [AdministrarController::class, 'ver_externo'])->name('ver_externo');
+            Route::get('/edit_externo.php/{id}', [AdministrarController::class, 'edit_externo'])->name('edit_externo');
+
+            /***  LOCALES  ***/
+
+        });        
+    });
+
+    Route::group(['prefix'=>'admin','as'=>'admin.' ],function () {
+
+        /***  EMPLEADOS ***/
+        Route::get('/empleados.php', [EmpleadoControl::class, 'empleados'])->name('empleados');
+        Route::get('/tablas/tb_empleados.php', [EmpleadoControl::class, 'tb_empleados'])->name('tablas.tb_empleados');
+
+        Route::post('/modals/add_empleado.php', [EmpleadoControl::class, 'add_empleado'])->name('modals.add_empleado');
+        Route::post('/store_add_empleado.php', [EmpleadoControl::class, 'store_add_empleado'])->name('store_add_empleado');
+        Route::post('/modals/edit_empleado.php', [EmpleadoControl::class, 'edit_empleado'])->name('modals.edit_empleado');
+        Route::post('/update_empleado.php', [EmpleadoControl::class, 'update_empleado'])->name('update_empleado');
+        Route::get('/ver_empleados.php/{id}', [EmpleadoControl::class, 'ver_empleados'])->name('ver_empleados');
+        Route::post('/modals/cuenta_us.php', [EmpleadoControl::class, 'cuenta_us'])->name('modals.cuenta_us');
+        Route::post('/add_cuenta_us.php', [EmpleadoControl::class, 'add_cuenta_us'])->name('add_cuenta_us');
+        Route::post('/modals/cuenta_us_edit.php', [EmpleadoControl::class, 'cuenta_us_edit'])->name('modals.cuenta_us_edit');
+        Route::post('/edit_cuenta_us.php', [EmpleadoControl::class, 'edit_cuenta_us'])->name('edit_cuenta_us');
     });
 });

@@ -116,22 +116,22 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expexterno/recibido.php*')) active @endif">
+                        <a href="{{ route('modulos.expexterno.recibido') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.compact">Recibidos</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expexterno/archivado.php*')) active @endif">
+                        <a href="{{ route('modulos.expexterno.archivado') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Archivados</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/expexterno/derivado.php*')) active @endif">
+                        <a href="{{ route('modulos.expexterno.derivado') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Derivados</span>
                             <span class="pcoded-mcaret"></span>
@@ -139,35 +139,52 @@
                     </li>
                 </ul>
             </li>
-            <li class=" pcoded-hasmenu">
+            <li class=" pcoded-hasmenu @if (Request::is('modulos/administrador*')) active pcoded-trigger @endif ">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                     <span class="pcoded-mtext">Administrador</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/administrador/interno.php*')) active @endif">
+                        <a href="{{ route('modulos.administrador.interno') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.compact">Exp. internos</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="">
+                    <li class="@if (Request::is('modulos/administrador/externo.php*')) active @endif">
+                        <a href="{{ route('modulos.administrador.externo') }}">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Exp. Eternos</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class=" ">
+                    {{-- <li class=" ">
                         <a href="">
                             <span class="pcoded-micon"><i class="icon-chart"></i></span>
                             <span class="pcoded-mtext" data-i18n="nav.page_layout.vertical.sidebar-fixed">Locales</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
+            </li>            
+        </ul>
+        <div class="pcoded-navigatio-lavel" data-i18n="nav.category.other">Administrador</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="@if (Request::is('admin/empleados.php*')) active @endif">
+                <a href="{{ route('admin.empleados') }}">
+                    <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i></span>
+                    <span class="pcoded-mtext" data-i18n="nav.sample-page.main">Empleados</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
             </li>
+            {{-- <li class="@if (Request::is('/')) active @endif">
+                <a href="{{ route('inicio') }}">
+                    <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i></span>
+                    <span class="pcoded-mtext" data-i18n="nav.sample-page.main">Empleados</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li> --}}
         </ul>
     </div>

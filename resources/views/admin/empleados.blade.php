@@ -35,29 +35,29 @@
 <script>
 
 $(document).ready(function() {
-    table_emitidos();
+    table_folios();
 });
 
-var tabla = $("#table_emitidos").DataTable();
-var table_emitidos = () => {
+var tabla = $("#table_folios").DataTable();
+var table_folios = () => {
     $.ajax({
         type: 'GET',
-        url: "{{ route('modulos.expexterno.tablas.tb_xrecibir') }}" ,
+        url: "{{ route('admin.tablas.tb_empleados') }}" ,
         dataType: "json",
         success: function(data){
             tabla.destroy();
-            $("#table_emitidos_body").html(data.html);
-            tabla = $("#table_emitidos").DataTable({
+            $("#table_folios_body").html(data.html);
+            tabla = $("#table_folios").DataTable({
                 "responsive": true,
                 "autoWidth": false,
-                language: {"url": "{{ asset('js/Spanish.json')}}"}, 
+                language: {"url": "{{ asset('js/Spanish.json')}}"},
                 "columns": [
                     { "width": "" },
-                    { "width": "15px" },
                     { "width": "" },
                     { "width": "" },
-                    { "width": "10px" },
-                    { "width": "10px" },
+                    { "width": "" },
+                    { "width": "" },
+                    { "width": "" },
                     { "width": "" }
                 ]
             });
@@ -69,60 +69,97 @@ var table_emitidos = () => {
     });
 }
 
-var btnModalArchivos = (id, tipo_log) => {
-    console.log(id);
-
+var btnModalEmp = () => {
+    
     $.ajax({
         type:'post',
-        url: "{{ route('modulos.expexterno.modals.md_archivo') }}",
+        url: "{{ route('admin.modals.add_empleado') }}",
         dataType: "json",
-        data:{"_token": "{{ csrf_token() }}", id : id, tipo_log: tipo_log},
+        data:{"_token": "{{ csrf_token() }}"},
         success:function(data){
-            $("#modal_ver_archivo").html(data.html);
-            $("#modal_ver_archivo").modal('show');
+            $("#modal_add_emp").html(data.html);
+            $("#modal_add_emp").modal('show');
         }
     });
 }
 
-var btnModalArchivosDerivado = (id, tipo_log) => {
-    console.log(id);
+var btnAddEmpl = () => {
+    var formData = new FormData();
+    formData.append("nombre", $("#nombre").val());
+    formData.append("apellido", $("#apellido").val());
+    formData.append("dni", $("#dni").val());
+    formData.append("f_nacimiento", $("#f_nacimiento").val());
+    formData.append("mail", $("#mail").val());
+    formData.append("sexo", $("#sexo").val());
+    formData.append("tit_tipo", $("#tit_tipo").val());
+    formData.append("oficinas_id", $("#oficinas_id").val());
+    formData.append("encargado", $("#encargado").val());
+    formData.append("cargo", $("#cargo").val());
+    formData.append("_token", $("input[name=_token]").val());
 
     $.ajax({
-        type:'post',
-        url: "{{ route('modulos.expexterno.modals.md_archivo') }}",
+        type: "POST",
         dataType: "json",
-        data:{"_token": "{{ csrf_token() }}", id : id, tipo_log: tipo_log},
-        success:function(data){
-            $("#modal_ver_archivo").html(data.html);
-            $("#modal_ver_archivo").modal('show');
+        cache: false,
+        url: "{{ route('admin.store_add_empleado') }}",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){            
+            $("#modal_add_emp").modal('hide');
+            table_folios();
+        },
+        error: function(e){
+            console.log("error");
         }
     });
 }
 
-var btnRecibir = (id, folio) => {
-    console.log(id);
-
-    swal.fire({
-        title: "Seguro que desea recibir el expediente?",
-        text: `Recibir`,
-        type: "warning",
-        icon: 'info',
-        showCancelButton: !0,
-        confirmButtonText: "Si, Recibir!",
-        cancelButtonText: "Cancelar"
-    }).then((result) => {
-        if (result.value) {
-                $.ajax({
-                    url: "{{ route('modulos.expexterno.recibir_exp') }}",
-                    type: 'post',
-                    data: {_token: $('input[name=_token]').val(), id: id, folio: folio},
-                    success: function(response){
-                        table_emitidos();
-                    }
-                });
+var btnModalEmpEdit = (id) => {
+    
+    $.ajax({
+        type:'post',
+        url: "{{ route('admin.modals.edit_empleado') }}",
+        dataType: "json",
+        data:{"_token": "{{ csrf_token() }}", id:id},
+        success:function(data){
+            $("#modal_edt_emp").html(data.html);
+            $("#modal_edt_emp").modal('show');
         }
+    });
+}
 
-    })
+var btnEditEmpl = () => {
+    var formData = new FormData();
+    formData.append("id", $("#id").val());
+    formData.append("nombre", $("#nombre").val());
+    formData.append("apellido", $("#apellido").val());
+    formData.append("dni", $("#dni").val());
+    formData.append("f_nacimiento", $("#f_nacimiento").val());
+    formData.append("mail", $("#mail").val());
+    formData.append("sexo", $("#sexo").val());
+    formData.append("tit_tipo", $("#tit_tipo").val());
+    formData.append("oficinas_id", $("#oficinas_id").val());
+    formData.append("encargado", $("#encargado").val());
+    formData.append("cargo", $("#cargo").val());
+    formData.append("_token", $("input[name=_token]").val());
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        cache: false,
+        url: "{{ route('admin.update_empleado') }}",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(data){            
+            $("#modal_edt_emp").modal('hide');
+            table_folios();
+        },
+        error: function(e){
+            console.log("error");
+        }
+    });
 }
 
 </script>
@@ -137,8 +174,8 @@ var btnRecibir = (id, folio) => {
         <div class="page-wrapper">
             <div class="page-header">
                 <div class="page-header-title">
-                    <h4>Trámite Documentario</h4>
-                    <span>Expedientes Internos</span>
+                    <h4>Empleados</h4>
+                    <span>Lista de empleados</span>
                 </div>
                 <div class="page-header-breadcrumb">
                     <ul class="breadcrumb-title">
@@ -160,27 +197,27 @@ var btnRecibir = (id, folio) => {
                         <!-- Product list card start -->
                         <div class="card product-add-modal">
                             <div class="card-header">
-                                <h5>Lista de expedientes sin recibir</h5>
+                                <h5>Lista general de empleados registrados</h5>
                                 {{-- <a href="{{ route('modulos.mesapartes.td_nuevo') }}" class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger" data-modal="modal-13"> <i class="icofont icofont-plus m-r-5"></i> Nuevo Archivo --}}
                                 </a>
                             </div>
                             <div class="card-block">
                                 <div class="table">
                                     <div class="table-content">
-                                        <table class="table table-bordered table-hover display compact nowrap" id="table_emitidos">
+                                        <table class="table table-bordered table-hover display compact nowrap" id="table_folios">
                                             <thead class="bg-dark">
                                                 <tr >
                                                     <th></th>
-                                                    <th>Número Interno</th>
-                                                    <th>Cabecera y Fecha</th>
-                                                    <th>Firma, asunto y <br />observaciones</th>
-                                                    <th>Adjunto <br />Folio</th>
-                                                    <th>Adjunto <br />Derivado</th>
+                                                    <th>Apellidos y Nombres</th>
+                                                    <th>Usuario</th>
+                                                    <th>Oficina</th>
+                                                    <th>Encargado</th>
+                                                    <th>Cargo</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="table_emitidos_body">
-                                                
+                                            <tbody id="table_folios_body">
+
                                             </tbody>
                                         </table>
                                         
@@ -205,7 +242,9 @@ var btnRecibir = (id, folio) => {
                                         <br />
                                         <ul>
                                             <li><a href=""><i class="icofont icofont-refresh text-success" ></i> Refrescar</a></li>
-                                            {{-- <li><a href="{{ route('modulos.mesapartes.td_nuevo') }}"><i class="icofont icofont-plus m-r-5 text-success"></i>Agregar un nuevo Folio.</a></li> --}}
+                                            <li>
+                                                <a class="cursor-pointer text-primary" id="contenido_us_edit"  data-toggle="modal" data-target="#large-Modal" onclick="btnModalEmp()" ><i class="icofont icofont-plus m-r-5 text-success"></i> Agregar un nuevo empleado.</a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -216,7 +255,8 @@ var btnRecibir = (id, folio) => {
                                         Información
                                     </div>
                                     <div class="panel-body">
-                                        <p>Desde aquí puede aceptar un documento como "Recibido" y tambien puede revisarlo para ver su recorrido y archivos adjuntos al mismo.</p>
+                                        <p>Para ver los detalles del folio de un clic sobre el asunto. <br />
+                                            OJO: Si elimina un folio que ya tiene un seguimiento guardado, tambien se eliminarán todos los registros relacionados al mismo</p>
                                     </div>
                                 </div>
                             </div>
@@ -230,7 +270,7 @@ var btnRecibir = (id, folio) => {
 </div>
 
 {{-- Ver Expediente --}}
-<div class="modal fade" id="modal_ver_expediente" tabindex="-1" role="dialog"></div>
+<div class="modal fade" id="modal_add_emp" tabindex="-1" role="dialog"></div>
 {{-- Ver Archivo --}}
-<div class="modal fade" id="modal_ver_archivo" tabindex="-1" role="dialog" ></div>
+<div class="modal fade" id="modal_edt_emp" tabindex="-1" role="dialog" ></div>
 @endsection

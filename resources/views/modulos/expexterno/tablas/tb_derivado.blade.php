@@ -1,6 +1,5 @@
 @foreach ($query as $i => $q)
-    <tr class="<?php if($q->urgente === 1 ){  echo "urgente";  } ?>">
-        <td><i class="<?php if($q->urgente === 1 ){  echo "icofont icofont-star text-danger ";  } ?>"></i></td>        
+    <tr class="">
         <td>{{ $q->cabecera }} <br /> {{ $q->exp }} - {{ $q->año_exp }}</td>
         <td>
             {{ $q->cabecera }} <br /> 
@@ -14,15 +13,15 @@
             <a href="{{ route('modulos.expexterno.ver_folio', $q->id_folio) }}" class="bandejTool btn-cursor"  data-tippy-content="Ver Expediente" >
                 {{ $q->firma }} <br /> {{ $q->asunto }} <br /> {{ $q->obs }} 
             </a>  
-        </td>     
+        </td>       
         <td>
-            <button type="button" class="btn btn-nocolor bandejTool" data-toggle="modal" data-target="#large-Modal" onclick="btnModalArchivos('{{ $q->id_folio }}', 'folioext')" data-tippy-content="Ver Archivos adjuntos al expediente"><i class="fa fa-cloud-download"></i></button>
+            {{ $q->nfolios }}
+        </td> 
+        <td>
+            <button type="button" class="btn btn-nocolor bandejTool" data-toggle="modal" data-target="#large-Modal" onclick="btnModalArchivos('{{ $q->id_folio }}', 'folioint')" data-tippy-content="Ver Archivos adjuntos al expediente"><i class="fa fa-cloud-download"></i></button>
         </td>
         <td>
             <button type="button" class="btn btn-nocolor bandejTool" data-toggle="modal" data-target="#large-Modal" onclick="btnModalArchivosDerivado('{{ $q->id_folio }}', 'derivar')" data-tippy-content="Ver Archivos adjuntos al expediente cuando fue derivado"><i class="fa fa-cloud-download"></i></button>
-        </td>
-        <td class="inline">
-            <button type="buttom" class="btn btn-sm nobtn" onclick="btnRecibir('{{ $q->derivar_id }}', '{{ $q->id_folio }}')"><i class="fa fa-check"></i> Recibir</button>
         </td>
     </tr>
     
