@@ -53,10 +53,10 @@ class PrincipalController extends Controller
         $oficinas = Oficina::select('oficinas.id as id_ofi', 'oficinas.nombre as nom_ofi', 'lugares.id', 'lugares.nombre as nom_lug')
                                 ->join('lugares', 'lugares.id', '=', 'oficinas.lugares_id');
 
-        $query = Folioext::join('td_tipos', 'td_tipos.id', '=', 'folioext.td_tipos_id')
-                            ->join('log_derivar', 'log_derivar.folioext_id', '=', 'folioext.id')
-                            ->join('empleado', 'empleado.id', '=', 'folioext.empid')
-                            ->joinSub($oficinas, 'O', function($join){
+        $query = Folioext::leftJoin('td_tipos', 'td_tipos.id', '=', 'folioext.td_tipos_id')
+                            ->leftJoin('log_derivar', 'log_derivar.folioext_id', '=', 'folioext.id')
+                            ->leftJoin('empleado', 'empleado.id', '=', 'folioext.empid')
+                            ->leftJoinSub($oficinas, 'O', function($join){
                                 $join->on( 'O.id_ofi', '=', 'folioext.c_oficina');
                             })
                             ->select('*', 'folioext.id as id_folio', DB::raw('CONCAT(empleado.nombre," ", empleado.apellido) as nombres'), 'nom_ofi', 'nom_lug', 'td_tipos.nombre as nom_tipdoc')
@@ -65,12 +65,14 @@ class PrincipalController extends Controller
         $archivos = Archivoext::where('folioext_id', $request->id)->get();
 
        
-                                        // dd($log_derivados);
+                                        // dd($query);
 
         $log_archivados = Logarchivados::select('log_archivo.fecha', 'log_archivo.obs', 'log_archivo.forma','log_archivo.provei', 'oficinas.nombre')
                                         ->join('folioext', 'folioext.id', '=', 'log_archivo.folioext_id')
                                         ->join('oficinas', 'oficinas.id', '=', 'log_archivo.c_oficina')
                                         ->where('log_archivo.folioext_id', $request->id)->get();
+
+                                        // dd($log_archivados);
 
         return view('modulos.mesapartes.td_folios_view', compact('query', 'archivos', 'log_archivados'));
     }

@@ -2,23 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-
-use Illuminate\Support\Collection;
-use Illuminate\Support\toArray;
-use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon;
-use Response;
-use Illuminate\Support\Str;
+use \PDF;
+use File;
 use DateTime;
+
+use Response;
 use DatePeriod;
 use DateInterval;
-use Illuminate\Support\Facades\URL;
-use File;
-use Barryvdh\DomPDF\Facade\Pdf;
-
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Lugar;
 use App\Models\Oficina;
@@ -26,8 +17,26 @@ use App\Models\Tdtipos;
 use App\Models\Empleado;
 use App\Models\Folioext;
 use App\Models\Archivoext;
-use App\Models\Logderivarext;
+use Illuminate\Support\Str;
+
+use Illuminate\Http\Request;
+use App\Mail\MensajeCargoExt;
 use App\Models\Logarchivados;
+use App\Models\Logderivarext;
+
+use Illuminate\Support\toArray;
+
+use BaconQrCode\Encoder\Encoder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Database\Eloquent\Builder;
+use BaconQrCode\Exception\RuntimeException;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use BaconQrCode\Common\ErrorCorrectionLevel;
+
 
 class ExternoController extends Controller
 {
@@ -36,6 +45,18 @@ class ExternoController extends Controller
         $td_tipos = Tdtipos::where('ext', 1)->orderBy('nombre', 'desc')->get();
 
         return view('mesa_partes', compact('td_tipos'));
+    }
+
+    public function cargo(Request $request, $id)
+    {
+        $año_act = Carbon::now()->format('Y');
+
+        $data = Folioext::where('exp', $id)->where('año_exp', $año_act)->first();
+
+        $codigoQR = QrCode::format('png')->size(200)->generate('kevin');
+
+        $pdf = Pdf::loadView('cargo', compact('data', 'codigoQR'));
+        return $pdf->stream();
     }
 
     public function store(Request $request)
@@ -57,7 +78,7 @@ class ExternoController extends Controller
             //SE CREA EXPEDIENTE POR AÑO Y MES
             // dd($request->all());
             $año_act = Carbon::now()->format('Y');
-            $mes_act = Carbon::now()->format('m');  
+            $mes_act = Carbon::now()->format('m');
             
             // AGREGAMOS EL SELECT MULTIPLE
             // INCREMENTAR N EXPEDIENTE
@@ -75,13 +96,16 @@ class ExternoController extends Controller
 
             $tipo_documento = Tdtipos::where('id', $request->t_doc_envio)->first();
 
-            $name = '';
-            $explode = explode(' ', $nombre);
-            foreach($explode as $x){
-                $name .=  $x[0];
-            }
+            $nombre = $request->nombres.' '.$request->ap_paterno.' '.$request->ap_materno;
+            $re = '/\b(\w)[^\s]*\s*/m';
+            $str = $nombre;
+            $subst = '$1';
 
-            $cabecera = $tipo_documento->nombre. 'NRO.'. $request->n_doc_envio.'-'.$año_act.'-'.$name;
+            $result = preg_replace($re, $subst, $str);
+
+            $n_doc_ = Str::padLeft($request->n_doc_envio, 4, '0');
+
+            $cabecera = $tipo_documento->nombre. ' Nro. '. $n_doc_.'-'.$año_act.'-'.$result;
 
 
             $save = new Folioext;
@@ -145,6 +169,8 @@ class ExternoController extends Controller
                     $archivo->save();
                 }
             }
+
+            Mail::to('kevinmuchcco@gmail.com')->send(new MensajeCargoExt);
 
             return $save;
 

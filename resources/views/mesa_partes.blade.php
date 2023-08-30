@@ -443,11 +443,34 @@ var btnEnviar = () =>{
             document.getElementById("btnEnviarForm").disabled = true;
         },
         success: function(result){
-          if(result.success){
+          $("#n_documento").val("");
+          $("#r_social").val("");
+          $("#ruc").val("");
+          $("#ap_materno").val("");
+          $("#ap_paterno").val("");
+          $("#nombres").val("");
+          $("#telefono").val("");
+          $("#correo").val("");
+          $("#direccion").val("");
+          $("#t_doc_envio").val("");
+          $("#n_folio_envio").val("");
+          $("#asunto_envio").val("");
+          document.getElementById("btnEnviarForm").innerHTML = 'ENVIAR';
+          document.getElementById("btnEnviarForm").disabled = false;
+          console.log(result.exp);
+          var exp = result.exp
 
-          }else{
-            console.log(result);
-          }
+          var link = '{{ URL::to('/') }}';
+          var ruta = '/cargo/'+exp;
+
+          var href = link+ruta;
+
+          var blank = "_blank";
+          window.open(href, blank);
+
+          
+
+
         },
         error: function(jqxhr,textStatus,errorThrown){
             console.log(jqxhr.responseJSON.error);

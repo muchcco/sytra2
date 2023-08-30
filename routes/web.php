@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\EmpleadoControl;
 Auth::routes();
 
 Route::get('mesa_partes.php' , [ExternoController::class, 'mesa_partes'])->name('mesa_partes');
+Route::get('cargo/{id}' , [ExternoController::class, 'cargo'])->name('cargo');
 Route::post('store' , [ExternoController::class, 'store'])->name('store');
 
 Route::group(['middleware' => ['auth']], function () {

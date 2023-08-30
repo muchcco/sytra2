@@ -415,7 +415,7 @@ var btnModificarDerivar = (id) => {
                                                             <td>Adjunto</td>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id="table_log_archivar_body">
+                                                    <tbody id="table_log_archivar_body">                                                        
                                                         @forelse ($log_archivados as $i => $log_arc)
                                                             <tr>
                                                                 <td>{{ $i + 1 }}</td>
